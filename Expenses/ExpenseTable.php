@@ -306,7 +306,7 @@ $Expenses = mysqli_query($con, $query);
                         <div class="card-header">
                             <h3 class="card-title">Expenses Table</h3>
                             <div class="card-tools">
-                                <a href="AddExpense.php"><button type="button" class="btn btn-success btn-sm">Add Expense Type</button></a>
+                                <a href="AddExpense.php"><button type="button" class="btn btn-success btn-sm">Add Expense</button></a>
                             </div>
                         </div>
                         <!-- /.card-header -->

@@ -344,7 +344,7 @@ if (isset($_GET['Gid'])) {
                                 <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
                             <?php endif;  ?>
 
-                            <form action="../inc/addexpensegroup.php" method="POST">
+                            <form action="../inc/updateexpensesgroup.php" method="POST">
 
 
                                 <div class="form-group col-4">

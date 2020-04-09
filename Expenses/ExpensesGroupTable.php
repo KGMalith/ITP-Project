@@ -360,7 +360,7 @@ $expgroup = mysqli_query($con, $query);
                                                             <a href="ExpensesGroup.php?Gid=<?php echo $id  ?>"><button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button></a> &nbsp;&nbsp;
-                                                            <a href="../inc/deleteleavetype.php?Gid=<?php echo $id  ?>" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <a href="../inc/deleteexpensegroup.php?Gid=<?php echo $id  ?>" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
                                                                     <i class="fas fa-trash-alt"></i>
                                                                 </button></a>
                                                         </div>

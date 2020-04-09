@@ -306,7 +306,7 @@ $ExpenseTypes = mysqli_query($con, $query);
                         <div class="card-header">
                             <h3 class="card-title">Expenses Type Table</h3>
                             <div class="card-tools">
-                                <a href="AddExpense.php"><button type="button" class="btn btn-success btn-sm">Add Expense Type</button></a>
+                                <a href="AddExpensesTypes.php"><button type="button" class="btn btn-success btn-sm">Add Expense Type</button></a>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -358,7 +358,7 @@ $ExpenseTypes = mysqli_query($con, $query);
                                                             <a href="ExpensesTypes.php?Tid=<?php echo $id  ?>"><button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button></a> &nbsp;&nbsp;
-                                                            <a href="../../inc/deleteleavetype.php?Tid=<?php echo $id  ?>" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <a href="../inc/deleteexpensestype.php?Tid=<?php echo $id  ?>" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
                                                                     <i class="fas fa-trash-alt"></i>
                                                                 </button></a>
                                                         </div>

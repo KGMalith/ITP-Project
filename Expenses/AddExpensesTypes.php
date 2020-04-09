@@ -370,7 +370,7 @@ include '../inc/dbconnect.php';
 
                 <div class="flex ml-2">
                   <button type="submit" id="addexpensetype" name="addexpensetype" class="btn btn-success">Add Expense Type</button>
-                  <a href="LeaveTypeTable.php"><button type="button" class="btn btn-warning ml-1" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
+                  <a href="ExpensesTypeTable.php"><button type="button" class="btn btn-warning ml-1" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
                 </div>
 
 

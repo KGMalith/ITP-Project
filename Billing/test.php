@@ -1,3 +1,61 @@
+<?php
+include '../inc/dbconnect.php';
+include '../inc/buyinginvoiceidgenerator.php';
+
+
+$output = '';
+$query = "SELECT * FROM item ORDER BY iName ASC";
+$result = mysqli_query($con, $query);
+while ($row = mysqli_fetch_assoc($result)) {
+  $output .= '<option value="' . $row["itemID"] . '">' . $row["iName"] . '</option>';
+}
+
+$fresult = '';
+$query = "SELECT * FROM orderm ORDER BY Order_ID ASC";
+$rest = mysqli_query($con, $query);
+while ($row = mysqli_fetch_assoc($rest)) {
+  $fresult .= '<option value="' . $row["OrderM_ID"] . '">' . $row["Order_ID"] . '</option>';
+}
+
+$outp = '';
+$query = "SELECT * FROM vendor ORDER BY vName ASC";
+$result = mysqli_query($con, $query);
+while ($row = mysqli_fetch_assoc($result)) {
+  $outp .= '<option value="' . $row["vendorID"] . '">' . $row["vName"] . '</option>';
+}
+
+
+$out = "";
+$out .= '<option value="YES">YES</option>
+          <option value="NO">NO</option>
+          ';
+
+
+if(isset($_POST['invoicesub'])){
+  $InvoiceID = $_POST['invoiceno'];
+  $omid = $_POST['orderid'];
+  $vid = $_POST['VendorName'];
+  $invdate = $_POST['invoice_date'];
+  $itemid = $_POST['itemName'];
+  $quantity = $_POST['itemQuantity'];
+  $itemprice = $_POST['itemPrice'];
+  $humidity = $_POST['humidity'];
+  $discount = $_POST['itemDiscount'];
+  $delicost = $_POST['deliverycost'];
+  $total = $_POST['finaltotal'];
+
+
+  foreach($InvoiceID as $key => $value){
+    $save = "INSERT INTO riceorder(InvoiceID,itemID,quantity,item_price,Discount,humidity) VALUES('".$value."','".$itemid[$key]."','".$quantity[$key]."','".$itemprice[$key]."','".$discount[$key]."','".$humidity[$key]."')";
+    mysqli_query($con,$save);
+  }
+
+  
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -279,12 +337,39 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="card">
-                  <div class="container">
-                    <form action="">
+                  <div class="card-header" id="cus">
+                    <h5 class="card-title">Paddy Buying Invoice</h5>
+                    <div class="card-tools">
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-row mb-5">
+                      <div class="col-md-5">
+                        To, <br>
+                        <label for=""><b>RECEIVER (BILL TO)</b></label>
+                        <select class="form-control mb-2" name="VendorName" id="VendorName">
+                          <option selected disabled>--Select--</option>
+                          <?php echo $outp; ?>
+                        </select>
+                        <div id="Vendoraddress"> <input type="text" class="form-control" name="Vendoraddress" readonly> </div>
+                      </div>
+                      <div class="col-md-3"></div>
+                      <div class="col-md-4"><br>
+                        <label>Order ID</label>
+                        <select class="form-control mb-2" name="orderid" id="orderid">
+                          <option selected disabled>--Select--</option>
+                          <?php echo $fresult; ?>
+                        </select>
+                        <label>Invoice ID</label>
+                        <input type="text" name="invoiceno" id="invoiceno" class="form-control input-sm mb-2" placeholder="Enter Invoice Number" value="<?php echo $binvoiceid ?>" readonly>
+                        <input type="text" name="invoice_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
+                      </div>
+                    </div>
+                    <form action="" name="cart" method="POST">
                       <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                         <table id="buypaddyTable" class="table table-bordered table-hover table-responsive-sm" overflow="auto" name="cart">
                           <thead>
-                            <tr name="line_items">
+                            <tr name="">
                               <th style="width: 15%">Item Name</th>
                               <th>Quantity</th>
                               <th>Price</th>
@@ -302,28 +387,52 @@
 
                           <tbody>
                             <tr name="line_items">
-                              <td><input type="text" name="itemName" id="" class="form-control form-control-sm"></td>
+                              <td>
+                                <select class="form-control " name="itemName">
+                                  <option selected disabled>--Select--</option>
+                                  <?php echo $output; ?>
+                                </select>
+                              </td>
                               <td><input type="text" name="itemQuantity" id="" class="form-control form-control-sm"></td>
                               <td><input type="text" name="itemPrice" id="" class="form-control form-control-sm"></td>
-                              <td><input type="text" name="itemActualAmount" id="" class="form-control form-control-sm" jAutoCalc="{itemQuantity} * {itemPrice}"></td>
+                              <td><input type="text" name="itemActualAmount" id="" class="form-control form-control-sm" value="" jAutoCalc="{itemQuantity} * {itemPrice}"></td>
                               <td><input type="text" name="itemDiscount" id="" class="form-control form-control-sm"></td>
-                              <td><input type="text" name="humidity" id="" class="form-control form-control-sm"></td>
-                              <td><input type="text" name="itemTotal" id="" class="form-control form-control-sm"></td>
+                              <td>
+                                <select class="form-control" name="humidity" id="humidity">
+                                  <option selected disabled>--Select--</option>
+                                  <?php echo $out; ?>
+                                </select>
+                              </td>
+                              <td><input type="text" name="itemTotal" id="" class="form-control form-control-sm" value="" jAutoCalc="{itemActualAmount} - {itemDiscount}"></td>
                               <td><button type="button" name="remove_row" id="remove_row" class="remove_row btn btn-danger btn-sm">X</button></td>
                             </tr>
-                          </tbody>
+                            <tr>
+                              <td colspan="6" class="text-right"><b>Sub-Total</b></td>
+                              <td colspan="2"><span><input type="text" name="subtotal" id="subtotal" class="form-control" value="" jAutoCalc="SUM({itemTotal})" readonly> </span> </b> </td>
+                            </tr>
 
+                            <tr>
+                              <td colspan="6" class="text-right"><b>Delivery Cost</b></td>
+                              <td colspan="2"><span><input type="text" name="deliverycost" id="deliverycost" class="form-control"> </span> </b> </td>
+                            </tr>
+
+                            <tr>
+                              <td colspan="6" class="text-right"><b>Total</b></td>
+                              <td colspan="2"><span><input type="text" name="finaltotal" id="finaltotal" class="form-control" value="" jAutoCalc="{subtotal} + {deliverycost}" readonly> </span> </b> </td>
+                            </tr>
+
+                            <tr>
+                              <td colspan="6" class="text-center"><button type="submit" name="invoicesub" class="btn btn-info">Submit</button></td>
+                            </tr>
+                          </tbody>
                         </table>
                       </div>
-
                     </form>
                   </div>
                 </div>
               </div>
             </div>
-
-          </div>
-          <!-- /.row -->
+          </div> <!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content -->
@@ -382,6 +491,24 @@
     });
   </script>
   <script>
+    $(document).ready(function() {
+      $("#VendorName").change(function() {
+        var vid = $(this).val();
+        $.ajax({
+          url: "../inc/bpvendoraddress.php",
+          method: "POST",
+          data: {
+            VendorID: vid
+          },
+          dataType: "text",
+          success: function(data) {
+            $("#Vendoraddress").html(data);
+          }
+        })
+      });
+    });
+  </script>
+  <script>
     function autoCalcSetup() {
       $('form[name=cart]').jAutoCalc('destroy');
       $('form[name=cart] tr[name=line_items').jAutoCalc({
@@ -406,7 +533,7 @@
       var $top = $table.find('tr[name=line_items]').first();
       var $new = $top.clone(true);
       $new.jAutoCalc('destroy');
-      $new.insertBefore($top);
+      $new.insertAfter($top);
       $new.find('input[type=text]').val('');
       autoCalcSetup();
     });

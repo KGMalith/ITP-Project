@@ -364,7 +364,7 @@
 
                 <div class="form-group flex ml-2">
                   <button type="submit" id="addgroup" name="addgroup" class="btn btn-success">Add Group Name</button>
-                  <a href="LeaveTypeTable.php"><button type="button" class="btn btn-warning ml-1" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
+                  <a href="ExpensesGroupTable.php"><button type="button" class="btn btn-warning ml-1" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
 
                 </div>
 

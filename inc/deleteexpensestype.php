@@ -4,7 +4,7 @@ if(isset($_GET['Tid'])){
 
     $Tid = mysqli_real_escape_string($con,$_GET['Tid']);
 
-    $sql = "DELETE FROM expensetype WHERE ExpTID ='.$Tid.'";
+    $sql = "DELETE FROM expensetype WHERE ExpTID ='".$Tid."'";
     $result = mysqli_query($con,$sql);
     if($result){
 

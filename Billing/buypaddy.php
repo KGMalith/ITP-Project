@@ -391,7 +391,7 @@ $out .= '<option value="YES">YES</option>
                                   <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                                     <table id="buypaddyTable" class="table table-bordered table-hover table-responsive-sm" overflow="auto" name="cart">
                                       <thead>
-                                        <tr>
+                                        <tr name="line_items">
 
                                           <th style="width: 15%">Item Name</th>
                                           <th>Quantity</th>
@@ -408,7 +408,7 @@ $out .= '<option value="YES">YES</option>
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        <tr id="test">
+                                        <tr id="test" name="line_items">
 
                                           <td><select class="form-control " name="itemName">
                                               <option selected disabled>--Select--</option>
@@ -422,7 +422,7 @@ $out .= '<option value="YES">YES</option>
                                             <input type="text" class="form-control" name="itemPrice" id="itemPrice">
                                           </td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemActualAmount" id="itemActualAmount" readonly>
+                                            <input type="text" class="form-control" name="itemActualAmount" id="itemActualAmount" value="" jAutoCalc="{itemQuantity} * {itemPrice}" readonly>
                                           </td>
                                           <td>
                                             <input type="text" class="form-control" name="itemDiscount" id="itemDiscount">
@@ -432,7 +432,7 @@ $out .= '<option value="YES">YES</option>
                                               <?php echo $out; ?>
                                             </select></td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemTotal" id="itemTotal" readonly>
+                                            <input type="text" class="form-control" name="itemTotal" id="itemTotal" value="" jAutoCalc="{itemActualAmount} - {itemDiscount}" readonly>
                                           </td>
                                           <td>
                                             <button type="button" name="remove_row" id="remove_row" class="remove_row btn btn-danger btn-sm ">X</button>
@@ -533,30 +533,18 @@ $out .= '<option value="YES">YES</option>
   </script>
   <script>
     $(document).ready(function() {
-      $('form[name=cart] tr[name=line_items]').jAutoCalc({
-        keyEventsFire: true,
-        decimalPlaces: 2
-      });
-      $('form[name=cart]').jAutoCalc({
-        decimalPlaces: 2
-      });
-
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
       var count = 1;
       $('#addrow').on('click', function() {
         count = count + 1;
 
-        var markup = `<tr id="` + count + `">`;
+        var markup = `<tr id="` + count + `" name="line_items">`;
         markup += `<td><select class ='form-control' name = 'itemName'><option selected disabled > --Select-- </option> <?php echo $output; ?> </select> </td>`;
         markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity' id='itemQuantity" + count + "' data-qty='" + count + "'></td>";
         markup += "<td><input type='text' class='form-control' name='itemPrice' id='itemPrice" + count + "' ></td>";
-        markup += "<td><input type = 'text' class ='form-control' name='itemActualAmount' id='itemActualAmount' readonly></td>";
+        markup += `<td><input type = "text" class ="form-control" name="itemActualAmount" id="itemActualAmount" value="" jAutoCalc="{itemQuantity}*{itemPrice}" readonly></td>`;
         markup += "<td><input type = 'text' class = 'form-control' name = 'itemDiscount' id = 'itemDiscount' ></td>";
         markup += `<td><select class = 'form-control' name = 'humidity' id = 'humidity'><option selected disabled > --Select-- </option> <?php echo $out; ?> </select></td>`;
-        markup += "<td><input type ='text' class ='form-control' name ='itemTotal' id ='itemTotal' readonly ></td>";
+        markup += "<td><input type ='text' class ='form-control' name ='itemTotal' id ='itemTotal' value='' jAutoCalc='{itemQuantity}*{itemPrice}' readonly ></td>";
         markup += "<td><button type ='button' name='remove_row' id='remove_row' data-row='" + count + "' class ='remove_row btn btn-danger btn-sm' > X </button> </td>";
         markup += "</tr>";
 
@@ -582,6 +570,19 @@ $out .= '<option value="YES">YES</option>
 
   <script>
     $.validate();
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('form[name=cart] tr[name=line_items]').jAutoCalc({
+        keyEventsFire: true,
+        decimalPlaces: 2
+      });
+      $('form[name=cart]').jAutoCalc({
+        decimalPlaces: 2
+      });
+
+    });
   </script>
 
   <script>
