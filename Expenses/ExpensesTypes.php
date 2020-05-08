@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 
 if (isset($_GET['Tid'])) {
@@ -69,7 +76,7 @@ if (isset($_GET['Tid'])) {
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -95,7 +102,7 @@ if (isset($_GET['Tid'])) {
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -428,7 +435,7 @@ if (isset($_GET['Tid'])) {
         <footer class="main-footer">
             <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Powered By</b> <img src="dist/img/3.png" alt="User Image">
+                <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
             </div>
         </footer>
     </div>

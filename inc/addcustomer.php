@@ -5,7 +5,7 @@
 
         require 'dbconnect.php';
 
-
+        $cusID = mysqli_real_escape_string($con,$_POST['customerID']);
         $name = mysqli_real_escape_string($con,$_POST['cname']);
         $mobile = mysqli_real_escape_string($con,$_POST['mnumber']);
         $land = mysqli_real_escape_string($con,$_POST['lnumber']);
@@ -51,7 +51,7 @@
             exit();
             }
             else{
-                $sql = "INSERT INTO customer(cName,cMNumber,cLNumber,cEmail,cAddress,cCity,cDistrict) VALUES(?,?,?,?,?,?,?)";
+                $sql = "INSERT INTO customer(CusID,cName,cMNumber,cLNumber,cEmail,cAddress,cCity,cDistrict) VALUES(?,?,?,?,?,?,?,?)";
                 $stmt = mysqli_stmt_init($con);
 
                 if(!mysqli_stmt_prepare($stmt,$sql)){
@@ -59,7 +59,7 @@
                     exit();
                 }
                 else{
-                    mysqli_stmt_bind_param($stmt,"sssssss",$name,$mobile,$land,$mail,$address,$city,$district);
+                    mysqli_stmt_bind_param($stmt,"ssssssss",$cusID,$name,$mobile,$land,$mail,$address,$city,$district);
                     mysqli_stmt_execute($stmt);
                     header("Location: ../Customer/AddCustomerDetails.php?Register=Success");
                     exit();

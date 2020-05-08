@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 
 
@@ -56,7 +63,7 @@ $vendors = mysqli_query($con, $query);
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -82,7 +89,7 @@ $vendors = mysqli_query($con, $query);
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
         <!-- Sidebar Menu -->
@@ -339,6 +346,7 @@ $vendors = mysqli_query($con, $query);
                   <table id="example3" class="table table-bordered table-hover">
                     <thead>
                       <tr>
+                        <th style="width: 12%">VendorID</th>
                         <th>Full Name</th>
                         <th style="width: 15%">Phone (Mobile)</th>
                         <th>City</th>
@@ -349,6 +357,7 @@ $vendors = mysqli_query($con, $query);
                     <tbody>
                       <?php
                       while ($row = mysqli_fetch_assoc($vendors)) {
+                        $venID = $row['VenID'];
                         $VendorID = $row['vendorID'];
                         $VendorName = $row['vName'];
                         $VendorMNumber = $row['vMNumber'];
@@ -357,6 +366,7 @@ $vendors = mysqli_query($con, $query);
 
                       ?>
                         <tr>
+                          <td><?php echo $venID ?></td>
                           <td><?php echo $VendorName ?></td>
                           <td><?php echo $VendorMNumber ?></td>
                           <td><?php echo $VendorCity ?></td>
@@ -527,7 +537,7 @@ $vendors = mysqli_query($con, $query);
 
     $(function() {
       $('[data-toggle="tooltip"]').tooltip()
-    })
+    });
   </script>
 </body>
 

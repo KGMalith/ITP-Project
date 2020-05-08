@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 
 if (isset($_GET['VTid'])) {
@@ -8,8 +15,8 @@ if (isset($_GET['VTid'])) {
     $query = "SELECT * FROM vehicletype WHERE V_typeId ='" . $id . "'";
     $resultset = mysqli_query($con, $query);
     $row = mysqli_fetch_assoc($resultset);
+    $vehtyid = $row['vehicleTId'];
     $name = $row['V_typeName'];
-    $descrip = $row['V_typeDesc'];
 }
 
 
@@ -65,7 +72,7 @@ if (isset($_GET['VTid'])) {
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -91,7 +98,7 @@ if (isset($_GET['VTid'])) {
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
                 <!-- Sidebar Menu -->
@@ -332,10 +339,25 @@ if (isset($_GET['VTid'])) {
 
                             <form action="../inc/updatevehicletype.php" method="POST" enctype="multipart/form-data">
 
-                                <div class="form-row ml-1">
-
-
+                                <div class="form-row ml-1 mb-3">
                                     <div class="form-group col-4">
+                                        <label>Vehicle Type ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-car-alt"></i></span>
+                                            </div>
+                                            <?php
+                                            if (isset($_GET['vehtypid'])) {
+                                                $vehtypeid = $_GET['vehtypid'];
+                                                echo '<input type="text" name="VTypeid" class="form-control" value="' . $vehtypeid . '" readonly>';
+                                            } else {
+                                                echo '<input type="text" name="VTypeid" class="form-control" data-validation="required" value="' . $vehtyid . '" readonly>';
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-4 ml-5">
                                         <label>Vehicle Type Name<span class="requiredIcon" style="color:red;">*</span></label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -352,24 +374,6 @@ if (isset($_GET['VTid'])) {
                                         </div>
                                     </div>
 
-                                </div>
-
-                                <div class="form-group col-md-8">
-                                    <label>Description</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fas fa-edit"></i></span>
-                                        </div>
-
-                                        <?php
-                                        if (isset($_GET['desc'])) {
-                                            $desc = $_GET['desc'];
-                                            echo '<input type="text" name="description" id="description" class="form-control" value="' . $desc . '">';
-                                        } else {
-                                            echo '<input type="text" name="description" id="description" class="form-control" value="' . $descrip . '">';
-                                        }
-                                        ?>
-                                    </div>
                                 </div>
 
                                 <?php

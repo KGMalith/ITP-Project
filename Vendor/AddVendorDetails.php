@@ -1,3 +1,11 @@
+<?php
+include '../inc/Vendoridgenerator.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +56,7 @@
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -73,7 +81,7 @@
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -349,7 +357,16 @@
 
 
                   <form action="../inc/addvendor.php" method="POST">
-                    <div class="form-group">
+                    <div class="form-group col-md-3">
+                      <label>VendorID<span class="requiredIcon" style="color:red;">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
+                        </div>
+                        <input type="text" class="form-control" name="venID" value="<?php echo $vendorid ?>" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group ml-2">
                       <label>Name<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -359,7 +376,7 @@
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-3">
                         <label>Phone (Mobile)<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">
@@ -409,7 +426,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group ml-2">
                       <label>Address<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -425,7 +442,7 @@
                         ?>
                       </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-6">
                         <label>City<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">

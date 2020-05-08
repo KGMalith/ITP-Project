@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+<?php
 require '../inc/dbconnect.php';
 
 
@@ -57,7 +64,7 @@ $customers = mysqli_query($con, $query);
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="../Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -83,7 +90,7 @@ $customers = mysqli_query($con, $query);
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -336,6 +343,7 @@ $customers = mysqli_query($con, $query);
                   <table id="example1" class="table table-bordered table-hover">
                     <thead>
                       <tr>
+                        <th style="width: 12%">CustomerID</th>
                         <th>Full Name</th>
                         <th style="width: 15%">Phone (Mobile)</th>
                         <th>City</th>
@@ -347,6 +355,7 @@ $customers = mysqli_query($con, $query);
                       <?php
                       while ($row = mysqli_fetch_assoc($customers)) {
                         $CustomerID = $row['customerID'];
+                        $cusID = $row['CusID'];
                         $CustomerName = $row['cName'];
                         $CustomerMNumber = $row['cMNumber'];
                         $CustomerCity = $row['cCity'];
@@ -354,6 +363,7 @@ $customers = mysqli_query($con, $query);
                       ?>
 
                         <tr>
+                          <td><?php echo $cusID ?></td>
                           <td><?php echo $CustomerName ?></td>
                           <td><?php echo $CustomerMNumber ?></td>
                           <td><?php echo $CustomerCity ?></td>

@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 
 
@@ -56,7 +63,7 @@ $vendors = mysqli_query($con, $query);
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -445,7 +452,7 @@ $vendors = mysqli_query($con, $query);
 
     $(function() {
       $('[data-toggle="tooltip"]').tooltip()
-    })
+    });
   </script>
 </body>
 

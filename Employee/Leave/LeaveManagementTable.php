@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
+?>
+<?php
 require '../../inc/dbconnect.php';
 
 
@@ -56,7 +63,7 @@ require '../../inc/dbconnect.php';
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="../../Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -82,7 +89,7 @@ require '../../inc/dbconnect.php';
                         <img src="../../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -458,7 +465,7 @@ require '../../inc/dbconnect.php';
 
                                 <br>
                             </div>
-                           
+
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -539,7 +546,7 @@ require '../../inc/dbconnect.php';
                     swal.fire({
                         icon: 'error',
                         title: 'Cancelled',
-                        text: 'Customer Detail is Not Deleted',
+                        text: 'Leave Detail is Not Deleted',
                         confirmButtonColor: 'green',
 
                     })
@@ -565,7 +572,7 @@ require '../../inc/dbconnect.php';
                 icon: 'success',
                 title: 'Success!',
                 confirmButtonColor: 'green',
-                text: 'Customer Details are Updated Successfully.',
+                text: 'Employee Leave Details are Updated Successfully.',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -588,7 +595,7 @@ require '../../inc/dbconnect.php';
                 icon: 'error',
                 title: 'Oops...',
                 confirmButtonColor: 'green',
-                text: 'Customer Not Found!',
+                text: 'Employee Leave Details Not Found!',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -610,7 +617,7 @@ require '../../inc/dbconnect.php';
 
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
-        })
+        });
     </script>
 </body>
 

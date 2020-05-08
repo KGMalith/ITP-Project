@@ -1,4 +1,12 @@
 <?php
+include '../inc/Vehicleidgenerator.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 ?>
 <!DOCTYPE html>
@@ -51,7 +59,7 @@ include '../inc/dbconnect.php';
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -77,7 +85,7 @@ include '../inc/dbconnect.php';
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -151,6 +159,8 @@ include '../inc/dbconnect.php';
                 </li>
               </ul>
             </li>
+
+
 
             <li class="nav-item">
               <a href="" class="nav-link">
@@ -294,7 +304,7 @@ include '../inc/dbconnect.php';
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-          <div class="card mb-5 col-12" id="vehicleaddback">
+          <div class="card mb-5 col-12">
 
             <div class="card-header" id="cus">
               <h5 class="card-title">Add Vehicle Details</h5>
@@ -360,207 +370,203 @@ include '../inc/dbconnect.php';
               <?php endif;  ?>
 
 
-              <div class="row">
-                <div class="col-md-2"></div>
-                <div class="card col-md-8" style="border-radius: 40px;" id="middlecardback">
-                  <form action="../inc/addvehicle.php" method="POST" enctype="multipart/form-data">
-                    <div class="card-body p-5">
-                      <div class="form-row">
-                        <div class="col-md-2"></div>
-                        <div class="form-group col-md-7">
-                          <div class="form-group">
-                            <label>Vehicle Registration No<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                              </div>
-                              <?php
-                              if (isset($_GET['regno'])) {
-                                $Regno = $_GET['regno'];
-                                echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number" value="' . $Regno . '">';
-                              } else {
-                                echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number">';
-                              }
-                              ?>
-                            </div>
-                          </div>
-
-                          <div class="form-group ">
-                            <label>Model No<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                              </div>
-                              <?php
-                              if (isset($_GET['modelNo'])) {
-                                $ModelNum = $_GET['modelNo'];
-                                echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number" value="' . $ModelNum . '">';
-                              } else {
-                                echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number">';
-                              }
-                              ?>
-                            </div>
-                          </div>
-
-                          <div class="form-group ">
-                            <label>Chassis No<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                              </div>
-
-                              <?php
-                              if (isset($_GET['casyNo'])) {
-                                $ChasyNo = $_GET['casyNo'];
-                                echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number" value="' . $ChasyNo . '">';
-                              } else {
-                                echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number">';
-                              }
-                              ?>
-                            </div>
-                          </div>
-
-                          <div class="form-group ">
-                            <label>Engine No<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                              </div>
-                              <?php
-                              if (isset($_GET['EngineNo'])) {
-                                $EngineNo = $_GET['EngineNo'];
-                                echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number" value="' . $EngineNo . '">';
-                              } else {
-                                echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number">';
-                              }
-                              ?>
-                            </div>
-                          </div>
-
-                          <div class="form-group ">
-                            <label> Vehicle Type<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-
-                              <div class="form-group">
-                                <select class="form-control custom-select" name="vehicletype">
-                                  <option value="Select" selected disabled>--SELECT--</option>
-                                  <?php
-                                  $sql = "SELECT V_typeId,V_typeName FROM vehicletype";
-                                  $results = mysqli_query($con, $sql);
-                                  while ($row = mysqli_fetch_assoc($results)) {
-
-                                    echo '
-                                            
-                                            <option value="' . $row['V_typeId'] . '">' . $row['V_typeName'] . '</option>
-                                        ';
-                                  }
-                                  ?>
-
-                                </select>
-                              </div>
-                            </div>
-
-                          </div>
-
-
-                          <div class="form-group">
-                            <label> Driver Name<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-
-                              <div class="form-group">
-                                <select class="form-control custom-select" name="DriverName">
-                                  <option value="Select" selected disabled>--SELECT--</option>
-                                  <?php
-                                  $sql = "SELECT name,id FROM employee WHERE designation = 'Driver'";
-                                  $results = mysqli_query($con, $sql);
-                                  while ($row = mysqli_fetch_assoc($results)) {
-
-                                    echo '  
-                                              <option value="' . $row['id'] . '">' . $row['name'] . '</option>
-                                        ';
-                                  }
-                                  ?>
-
-                                </select>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="form-group ">
-                            <label> Owner<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-
-                              <div class="form-group">
-                                <select class="form-control custom-select" name="vehicleowner">
-                                  <?php
-                                  if (isset($_GET['owner'])) {
-                                    $Owner = $_GET['owner'];
-                                    echo '<option value="' . $Owner . '">' . $Owner . ' </option> >
-                                      <option value="Company">Company</option>
-                                      <option value="Hire">Hire</option>';
-                                  } else {
-                                    echo '
-                                      <option value="Select" selected disabled>--SELECT--</option>
-                                      <option value="Company">Company</option>
-                                      <option value="Hire">Hire</option>';
-                                  }
-                                  ?>
-
-
-                                </select>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="form-group ">
-                            <label> Status<span class="requiredIcon" style="color:red;">*</span></label>
-                            <div class="input-group">
-
-                              <div class="form-group">
-                                <select class="form-control custom-select" name="vehiclestatus">
-                                  <?php
-                                  if (isset($_GET['stats'])) {
-                                    $Status = $_GET['stats'];
-                                    echo '<option value="' . $Status . '">' . $Status . ' </option> >
-                                      <option value="Active">Active</option>
-                                      <option value="Inactive">Inactive</option>
-                                      <option value="Repair">Repair</option>
-                                      ';
-                                  } else {
-                                    echo '
-                                      <option value="Select" selected disabled>--SELECT--</option>
-                                      <option value="Active">Active</option>
-                                      <option value="Inactive">Inactive</option>
-                                      <option value="Repair">Repair</option>
-                                      ';
-                                  }
-
-                                  ?>
-
-
-                                </select>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="flex">
-                            <button type="submit" id="addvehicle" name="addvehicle" class="btn btn-success btn-md">Add Vehicle</button>
-                            <button type="reset" class="btn btn-secondary ml-1 btn-md">Clear</button>
-                            <a href="VehicleTable.php"><button type="button" class="btn btn-warning ml-1 btn-md" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
-                          </div>
-                        </div>
-                      </div>
-
+              <form action="../inc/addvehicle.php" method="POST">
+                <div class="form-group col-md-3">
+                  <label>Vehicle ID<span class="requiredIcon" style="color:red;">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-car-alt"></i></span>
                     </div>
-                  </form>
+                    <input type="text" class="form-control" name="vehiID" value="<?php echo $vehiid ?>" readonly>
+                  </div>
                 </div>
 
-              </div>
+                <div class="form-row ml-1">
+
+                  <div class="form-group col-md-4">
+                    <label>Vehicle Registration No<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                      </div>
+                      <?php
+                      if (isset($_GET['regno'])) {
+                        $Regno = $_GET['regno'];
+                        echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number" value="' . $Regno . '">';
+                      } else {
+                        echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number">';
+                      }
+                      ?>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-3"></div>
+
+                  <div class="form-group col-md-4">
+                    <label>Model No<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                      </div>
+                      <?php
+                      if (isset($_GET['modelNo'])) {
+                        $ModelNum = $_GET['modelNo'];
+                        echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number" value="' . $ModelNum . '">';
+                      } else {
+                        echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number">';
+                      }
+                      ?>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-row ml-1">
+
+                  <div class="form-group col-md-4">
+                    <label>Chassis No<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                      </div>
+
+                      <?php
+                      if (isset($_GET['casyNo'])) {
+                        $ChasyNo = $_GET['casyNo'];
+                        echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number" value="' . $ChasyNo . '">';
+                      } else {
+                        echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number">';
+                      }
+                      ?>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3"></div>
+
+                  <div class="form-group col-md-4">
+                    <label>Engine No<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                      </div>
+                      <?php
+                      if (isset($_GET['EngineNo'])) {
+                        $EngineNo = $_GET['EngineNo'];
+                        echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number" value="' . $EngineNo . '">';
+                      } else {
+                        echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number">';
+                      }
+                      ?>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-row ml-1">
+
+                  <div class="form-group ml-2">
+                    <label> Vehicle Type<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+
+                      <div class="form-group">
+                        <select class="form-control" name="vehicletype">
+                          <option value="Select" selected disabled>--SELECT--</option>
+                          <?php
+                          $sql = "SELECT V_typeId,V_typeName FROM vehicletype";
+                          $results = mysqli_query($con, $sql);
+                          while ($row = mysqli_fetch_assoc($results)) {
+
+                            echo '
+                                              
+                                              <option value="' . $row['V_typeId'] . '">' . $row['V_typeName'] . '</option>
+                                          ';
+                          }
+                          ?>
+
+                        </select>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3"></div>
+
+                  <div class="form-group">
+                    <label> Driver Name<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+
+                      <div class="form-group">
+                        <select class="form-control" name="DriverName">
+                          <option value="Select" selected disabled>--SELECT--</option>
+                          <?php
+                          $sql = "SELECT name,id FROM employee WHERE designation = 'Driver'";
+                          $results = mysqli_query($con, $sql);
+                          while ($row = mysqli_fetch_assoc($results)) {
+
+                            echo '  
+                                                <option value="' . $row['id'] . '">' . $row['name'] . '</option>
+                                          ';
+                          }
+                          ?>
+
+                        </select>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3"></div>
+
+                  <div class="form-group ">
+                    <label> Owner<span class="requiredIcon" style="color:red;">*</span></label>
+                    <div class="input-group">
+
+                      <div class="form-group">
+                        <select class="form-control" name="vehicleowner">
+                          <?php
+                            echo '
+                                        <option value="Select" selected disabled>--SELECT--</option>
+                                        <option value="Company">Company</option>
+                                        <option value="Hire">Hire</option>';
+                          ?>
 
 
+                        </select>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="form-group ml-2">
+                  <label> Status<span class="requiredIcon" style="color:red;">*</span></label>
+                  <div class="input-group">
+
+                    <div class="form-group">
+                      <select class="form-control" name="vehiclestatus">
+                        <?php
+                          echo '
+                                      <option value="Select" selected disabled>--SELECT--</option>
+                                      <option value="Active">Active</option>
+                                      <option value="Inactive">Inactive</option>
+                                      <option value="Repair">Repair</option>
+                                      ';
+                        ?>
+
+
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="flex">
+                  <button type="submit" id="addvehicle" name="addvehicle" class="btn btn-success btn-md">Add Vehicle</button>
+                  <button type="reset" class="btn btn-secondary ml-1 btn-md">Clear</button>
+                  <a href="VehicleTable.php"><button type="button" class="btn btn-warning ml-1 btn-md" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
+                </div>
+              </form>
 
             </div>
 

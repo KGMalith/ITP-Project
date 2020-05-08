@@ -12,7 +12,7 @@ if(isset($_POST['addexpensetype'])){
         exit();
     }
 
-    $sql = "SELECT ExpTName FROM expensetype WHERE ExpTName='.$$ExpnsTypeName.'";
+    $sql = "SELECT ExpTName FROM expensetype WHERE ExpTName='$ExpnsTypeName'";
     $result = mysqli_query($con,$sql);
 
     if(mysqli_num_rows($result) > 0){

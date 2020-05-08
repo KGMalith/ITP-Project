@@ -1,3 +1,11 @@
+<?php
+include '../inc/vehicletypeidgenerator.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +56,7 @@
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -74,7 +82,7 @@
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -322,10 +330,18 @@
 
                             <form action="../inc/addvehicletype.php" method="POST" enctype="multipart/form-data">
 
-                                <div class="form-row ml-1">
+                                <div class="form-row ml-1 mb-3">
+                                    <div class="form-group col-md-3">
+                                        <label>Vehicle Type ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-car-alt"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="vehiTypeID" value="<?php echo $vehitypid ?>" readonly>
+                                        </div>
+                                    </div>
 
-
-                                    <div class="form-group col-4">
+                                    <div class="form-group col-4 ml-5">
                                         <label>Vehicle Type Name<span class="requiredIcon" style="color:red;">*</span></label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -342,24 +358,6 @@
                                         </div>
                                     </div>
 
-                                </div>
-
-                                <div class="form-group col-md-8">
-                                    <label>Description</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fas fa-edit"></i></span>
-                                        </div>
-
-                                        <?php
-                                        if (isset($_GET['desc'])) {
-                                            $desc = $_GET['desc'];
-                                            echo '<input type="text" name="description" id="description" class="form-control" value="' . $desc . '">';
-                                        } else {
-                                            echo '<input type="text" name="description" id="description" class="form-control">';
-                                        }
-                                        ?>
-                                    </div>
                                 </div>
 
                                 <button type="submit" id="addvtype" name="addvtype" class="btn btn-success">Add Vehicle Type</button>
@@ -464,7 +462,7 @@
             swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: 'Leave Details are Submited Successfully.',
+                text: 'Vehicle Type Details are Submited Successfully.',
                 confirmButtonColor: 'green',
                 closeOnEsc: false,
                 closeOnClickOutside: false,

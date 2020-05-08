@@ -5,7 +5,7 @@
     <title>Log in</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!--Custom CSS-->
+    <!--Custom CSS-->
     <link rel="stylesheet" href="dist/css/customCSS.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-     <!-- Google Font: Source Sans Pro -->
+    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="form-validator/theme-default.min.css">
     <link rel="stylesheet" href="sweetalert/sweetalert2.min.css">
 </head>
@@ -30,51 +30,48 @@
 
     <div class="login-box">
         <div class="login-logo">
-            <b>Nuwan</b> Rice Mill
+            <img src="dist/img/RICE.jpg" alt="Avatar" class="avatar img-fluid"><br />
+            <b>Nuwan Rice Mill </b>
         </div>
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-              <div class="text-center ">
-                <p style="color:black;"><b>LOGIN</b></p>
-              </div>
-              <div class="text-center">
-                <img src="dist/img/avatar5.png" alt="Avatar" class="avatar img-fluid">
-              </div>
+                <div class="text-center ">
+                    <p style="color:black;"><b>LOGIN</b></p>
+                </div>
+                <div class="text-center">
+                    <img src="dist/img/avatar5.png" alt="Avatar" class="avatar img-fluid">
+                </div>
                 <br><br>
                 <div class="text-center text-danger text-lg">
                     <?php
-                        if(isset($_GET['error'])){
-                            if($_GET['error'] == "emptyfields"){
-                              echo '<p> Fill All The Fields!</p>';
-                            }
-                            else if($_GET['error']== "SQLError"){
-                                echo '<p> SQL ERROR!</p>';
-                            }
-                            else if($_GET['error']== "WrongPassword"){
-                                echo '<p> Invalid Password!</p>';
-                            }
-                            else if($_GET['error']=="NoUser"){
-                                echo '<p> Invalid User!</p>';
-                            }
+                    if (isset($_GET['error'])) {
+                        if ($_GET['error'] == "emptyfields") {
+                            echo '<p> Fill All The Fields!</p>';
+                        } else if ($_GET['error'] == "SQLError") {
+                            echo '<p> SQL ERROR!</p>';
+                        } else if ($_GET['error'] == "WrongPassword") {
+                            echo '<p> Invalid Password!</p>';
+                        } else if ($_GET['error'] == "NoUser") {
+                            echo '<p> Invalid User!</p>';
                         }
-                        else if(isset($_GET['newpwd'])){
-                            if($_GET['newpwd'] == "passwordupdated"){
-                                echo '<p>Your Password Has Been Reset!</p>';
-                            }
+                    } else if (isset($_GET['newpwd'])) {
+                        if ($_GET['newpwd'] == "passwordupdated") {
+                            echo '<p>Your Password Has Been Reset!</p>';
                         }
+                    }
                     ?>
                 </div>
-                
+
                 <form action="inc/Login.inc.php" method="post">
-                  <div class="input-group mb-3">
+                    <div class="input-group mb-3">
                         <?php
-                            if (isset($_GET['usname'])) {
-                                  $uname = $_GET['usname'];
-                                    echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user"  value="' . $uname . '" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
-                            } else {
-                                    echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
-                                    }
+                        if (isset($_GET['usname'])) {
+                            $uname = $_GET['usname'];
+                            echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user"  value="' . $uname . '" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
+                        } else {
+                            echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
+                        }
                         ?>
                         <div class="input-group-append">
                             <div class="input-group-text">
@@ -106,7 +103,7 @@
                         <!-- /.col -->
                     </div>
                 </form>
-            
+
                 <!-- /.social-auth-links -->
 
                 <p class="mb-1">
@@ -118,10 +115,10 @@
         </div>
     </div>
     <!-- /.login-box -->
-        
-   
 
-    
+
+
+
     <!-- REQUIRED SCRIPTS -->
     <script src="Loader/script.js"></script>
     <!-- jQuery -->
@@ -137,7 +134,7 @@
     <!-- DataTables -->
     <script src="plugins/datatables/jquery.dataTables.js"></script>
     <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
-    
+
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->
     <script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
@@ -152,13 +149,13 @@
     <script src="form-validator/jquery.form-validator.js"></script>
     <script src="sweetalert/sweetalert2.all.min.js"></script>
     <script>
-      $.validate();
+        $.validate();
     </script>
 
     <script>
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-          });
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
     </script>
 </body>
 

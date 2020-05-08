@@ -3,6 +3,7 @@ include 'dbconnect.php';
 
 if(isset($_POST['addgroup'])){
 
+    $exgid = mysqli_real_escape_string($con,$_POST['expgrupid']);
     $ExpnsGroupName = mysqli_real_escape_string($con,$_POST['expensegroupname']);
     $Desc  = mysqli_real_escape_string($con,$_POST['description']);
 
@@ -11,7 +12,7 @@ if(isset($_POST['addgroup'])){
         exit();
     }
 
-    $sql = "SELECT ExpGName FROM expensegroup WHERE ExpGName='.$ExpnsGroupName.'";
+    $sql = "SELECT ExpGName FROM expensegroup WHERE ExpGName='$ExpnsGroupName'";
     $result = mysqli_query($con,$sql);
 
     if(mysqli_num_rows($result) > 0){
@@ -19,7 +20,7 @@ if(isset($_POST['addgroup'])){
         exit();
     }
 
-    $query = "INSERT INTO expensegroup(ExpGName,Descrip) VALUES('$ExpnsGroupName','$Desc')";
+    $query = "INSERT INTO expensegroup(ExpGroupID,ExpGName,Descrip) VALUES('$exgid','$ExpnsGroupName','$Desc')";
     mysqli_query($con,$query);
 
         header("Location: ../Expenses/AddExpensesGroup.php?Register=Success");

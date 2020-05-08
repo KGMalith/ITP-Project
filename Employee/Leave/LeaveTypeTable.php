@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
+?>
+<?php
 require '../../inc/dbconnect.php';
 
 
@@ -57,7 +64,7 @@ $leaves = mysqli_query($con, $query);
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="../Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -83,7 +90,7 @@ $leaves = mysqli_query($con, $query);
                         <img src="../../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -336,9 +343,10 @@ $leaves = mysqli_query($con, $query);
                                     <table id="example1" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
+                                                <th style="width: 12%">LeaveType ID</th>
                                                 <th>Leave Name</th>
-                                                <th>Applicable Employee Type</th>
-                                                <th style="width: 12%">No Of Days</th>
+                                                <th style="width: 13%">Applicable Employee Type</th>
+                                                <th style="width: 11%">No Of Days</th>
                                                 <th>Description</th>
                                                 <th class="text-center" style="width: 10%">Actions</th>
                                             </tr>
@@ -347,6 +355,7 @@ $leaves = mysqli_query($con, $query);
                                             <?php
                                             while ($row = mysqli_fetch_assoc($leaves)) {
                                                 $id = $row['Lid'];
+                                                $ltypid = $row['leaveTypeId'];
                                                 $LName = $row['LeaveName'];
                                                 $EmpType = $row['EmpType'];
                                                 $Days = $row['NoofDays'];
@@ -355,6 +364,7 @@ $leaves = mysqli_query($con, $query);
                                             ?>
 
                                                 <tr>
+                                                    <td><?php echo $ltypid ?></td>
                                                     <td><?php echo $LName ?></td>
                                                     <td><?php echo $EmpType ?></td>
                                                     <td><?php echo $Days ?></td>
@@ -400,7 +410,7 @@ $leaves = mysqli_query($con, $query);
         <footer class="main-footer">
             <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
+                <b>Powered By</b> <img src="../../dist/img/3.png" alt="User Image">
             </div>
         </footer>
     </div>
@@ -461,7 +471,7 @@ $leaves = mysqli_query($con, $query);
                     swal.fire({
                         icon: 'error',
                         title: 'Cancelled',
-                        text: 'Customer Detail is Not Deleted',
+                        text: 'Leave Type Detail is Not Deleted',
                         confirmButtonColor: 'green',
 
                     })
@@ -487,7 +497,7 @@ $leaves = mysqli_query($con, $query);
                 icon: 'success',
                 title: 'Success!',
                 confirmButtonColor: 'green',
-                text: 'Customer Details are Updated Successfully.',
+                text: 'Leave Type Details are Updated Successfully.',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -510,7 +520,7 @@ $leaves = mysqli_query($con, $query);
                 icon: 'error',
                 title: 'Oops...',
                 confirmButtonColor: 'green',
-                text: 'Customer Not Found!',
+                text: 'Leave Type Not Found!',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -532,7 +542,7 @@ $leaves = mysqli_query($con, $query);
 
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
-        })
+        });
     </script>
 </body>
 

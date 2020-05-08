@@ -1,11 +1,19 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 $VID = "";
 if (isset($_GET['vid'])) {
     $VID = mysqli_real_escape_string($con, $_GET['vid']);
-    $query = "SELECT v.VRegistrationNo,v.ModelNo,v.EngineNo,v.ChassisNo,v.Status,v.VOwner,vt.V_typeName,e.name,v.V_typeId,v.id FROM employee e, vehicletype vt,vehicle v WHERE e.id = v.id AND vt.V_typeId = v.V_typeId AND VehicleID='" . $VID . "'";
+    $query = "SELECT v.VRegistrationNo,v.VehID,v.ModelNo,v.EngineNo,v.ChassisNo,v.Status,v.VOwner,vt.V_typeName,e.name,v.V_typeId,v.id FROM employee e, vehicletype vt,vehicle v WHERE e.id = v.id AND vt.V_typeId = v.V_typeId AND VehicleID='" . $VID . "'";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_assoc($result);
+    $vehiclid = $row['VehID'];
     $RegisterNo = $row['VRegistrationNo'];
     $ChassyNo = $row['ChassisNo'];
     $ModelNo = $row['ModelNo'];
@@ -69,7 +77,7 @@ if (isset($_GET['vid'])) {
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -95,7 +103,7 @@ if (isset($_GET['vid'])) {
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -312,7 +320,7 @@ if (isset($_GET['vid'])) {
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="card mb-5 col-12" id="vehicleaddback">
+                    <div class="card mb-5 col-12">
 
                         <div class="card-header" id="cus">
                             <h5 class="card-title">Vehicle Details</h5>
@@ -330,249 +338,264 @@ if (isset($_GET['vid'])) {
                             <?php endif;  ?>
 
 
-                            <div class="row">
-                                <div class="col-md-2"></div>
-                                <div class="card col-md-8" style="border-radius: 40px;" id="middlecardback">
-                                    <form action="../inc/updatevehicle.php" method="POST" enctype="multipart/form-data">
-                                        <div class="card-body p-5">
-                                            <div class="form-row">
-                                                <div class="col-md-2"></div>
-                                                <div class="form-group col-md-7">
-                                                    <div class="form-group">
-                                                        <label>Vehicle Registration No<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                                                            </div>
-                                                            <?php
 
-                                                            echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number" value="' . $RegisterNo . '" disabled>';
+                            <form action="../inc/updatevehicle.php" method="POST" enctype="multipart/form-data">
+                                <div class="form-group col-md-3">
+                                    <label>Vehicle ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-car-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="vehiID" value="<?php echo $vehiclid ?>" readonly>
+                                    </div>
+                                </div>
 
-                                                            ?>
-                                                        </div>
-                                                    </div>
+                                <div class="form-row ml-1">
 
-                                                    <div class="form-group ">
-                                                        <label>Model No<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                                                            </div>
-                                                            <?php
+                                    <div class="form-group col-md-4">
+                                        <label>Vehicle Registration No<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                                            </div>
+                                            <?php
 
-                                                            echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number" value="' . $ModelNo . '" disabled>';
+                                            echo '<input type="text" name="registerno" id="registerno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Registration Number" value="' . $RegisterNo . '" disabled>';
 
-                                                            ?>
-                                                        </div>
-                                                    </div>
+                                            ?>
+                                        </div>
+                                    </div>
 
-                                                    <div class="form-group ">
-                                                        <label>Chassis No<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                                                            </div>
+                                    <div class="col-md-3"></div>
 
-                                                            <?php
+                                    <div class="form-group col-md-4">
+                                        <label>Model No<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                                            </div>
+                                            <?php
 
-                                                            echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number" value="' . $ChassyNo . '" disabled>';
+                                            echo '<input type="text" name="modelno" id="modelno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Model Number" value="' . $ModelNo . '" disabled>';
 
-                                                            ?>
-                                                        </div>
-                                                    </div>
+                                            ?>
+                                        </div>
+                                    </div>
 
-                                                    <div class="form-group ">
-                                                        <label>Engine No<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
-                                                            </div>
-                                                            <?php
+                                </div>
 
-                                                            echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number" value="' . $EngineNo . '" disabled>';
+                                <div class="form-row ml-1">
 
-                                                            ?>
-                                                        </div>
-                                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Chassis No<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                                            </div>
 
-                                                    <div class="form-group ">
-                                                        <label> Vehicle Type<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
+                                            <?php
 
-                                                            <div class="form-group">
-                                                                <select class="form-control" name="vehicletype" disabled>
-                                                                    <option value="<?php echo $VehicleID ?>"><?php echo $VehicleType ?></option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
+                                            echo '<input type="text" name="chasisno" id="chasisno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Chassis Number" value="' . $ChassyNo . '" disabled>';
 
-                                                    </div>
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3"></div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>Engine No<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-truck-pickup"></i></span>
+                                            </div>
+                                            <?php
+
+                                            echo '<input type="text" name="engineno" class="form-control" data-validation="required" data-validation-error-msg="Please Fill Vehicle Engine Number" value="' . $EngineNo . '" disabled>';
+
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row ml-2">
+
+                                    <div class="form-group ">
+                                        <label> Vehicle Type<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+
+                                            <div class="form-group">
+                                                <select class="form-control" name="vehicletype" disabled>
+                                                    <option value="<?php echo $VehicleID ?>"><?php echo $VehicleType ?></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3"></div>
+
+                                    <div class="form-group">
+                                        <label> Driver Name<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+
+                                            <div class="form-group">
+                                                <select class="form-control" name="DriverName" disabled>
+
+                                                    <option value="<?php echo $DriverID ?>"><?php echo $DriverName ?></option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3"></div>
+
+                                    <div class="form-group ">
+                                        <label> Owner<span class="requiredIcon" style="color:red;">*</span></label>
+                                        <div class="input-group">
+
+                                            <div class="form-group">
+                                                <select class="form-control" name="vehicleowner" disabled>
+                                                    <?php
+
+                                                    echo '
+                                                                            <option value="' . $Owner . '">' . $Owner . '</option>'
+
+                                                    ?>
 
 
-                                                    <div class="form-group">
-                                                        <label> Driver Name<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                                            <div class="form-group">
-                                                                <select class="form-control" name="DriverName" disabled>
+                                    </div>
 
-                                                                    <option value="<?php echo $DriverID ?>"><?php echo $DriverName ?></option>
-
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="form-group ">
-                                                        <label> Owner<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-
-                                                            <div class="form-group">
-                                                                <select class="form-control" name="vehicleowner" disabled>
-                                                                    <?php
-
-                                                                    echo '
-                                                                        <option value="' . $Owner . '">' . $Owner . '</option>'
-
-                                                                    ?>
+                                </div>
 
 
-                                                                </select>
-                                                            </div>
-                                                        </div>
+                                <div class="form-group ml-2">
+                                    <label> Status<span class="requiredIcon" style="color:red;">*</span></label>
+                                    <div class="input-group">
 
-                                                    </div>
+                                        <div class="form-group">
+                                            <select class="form-control" name="vehiclestatus" disabled>
+                                                <?php
 
-                                                    <div class="form-group ">
-                                                        <label> Status<span class="requiredIcon" style="color:red;">*</span></label>
-                                                        <div class="input-group">
-
-                                                            <div class="form-group">
-                                                                <select class="form-control" name="vehiclestatus" disabled>
-                                                                    <?php
-
-                                                                    echo '
+                                                echo '
                                                                         <option value="' . $status . '">' . $status . '</option>';
 
 
-                                                                    ?>
+                                                ?>
 
 
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-
-                                                    <div class="flex">
-                                                        <a href="VehicleTable.php"><button type="button" class="btn btn-warning btn-md" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                            </select>
                                         </div>
-                                    </form>
+                                    </div>
+
                                 </div>
 
-                            </div>
+
+                                <div class="flex">
+                                    <a href="VehicleTable.php"><button type="button" class="btn btn-warning btn-md" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
+                                </div>
 
 
+                            </form>
 
                         </div>
+                        <br>
 
-                    </div>
-                    <br>
-
-                    <!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
-
-        <!-- Main Footer -->
-        <footer class="main-footer">
-            <div id="foot">
-                <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
-                <div class="float-right d-none d-sm-inline-block img_div">
-                    <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
+                        <!-- /.row -->
+                    </div><!-- /.container-fluid -->
                 </div>
+                <!-- /.content -->
             </div>
-        </footer>
-    </div>
-    <!-- ./wrapper -->
+            <!-- /.content-wrapper -->
 
-    <!-- REQUIRED SCRIPTS -->
+            <!-- Main Footer -->
+            <footer class="main-footer">
+                <div id="foot">
+                    <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
+                    <div class="float-right d-none d-sm-inline-block img_div">
+                        <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- ./wrapper -->
 
-    <!-- jQuery -->
-    <script src="../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../dist/js/adminlte.min.js"></script>
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="../dist/js/demo.js"></script>
-    <!-- DataTables -->
-    <script src="../plugins/datatables/jquery.dataTables.js"></script>
-    <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+        <!-- REQUIRED SCRIPTS -->
 
-    <!-- PAGE PLUGINS -->
-    <!-- jQuery Mapael -->
-    <script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="../plugins/raphael/raphael.min.js"></script>
-    <script src="../plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../plugins/chart.js/Chart.min.js"></script>
-    <!-- PAGE SCRIPTS -->
-    <script src="../dist/js/pages/dashboard2.js"></script>
-    <script src="../form-validator/jquery.form-validator.min.js"></script>
-    <script src="../form-validator/jquery.form-validator.js"></script>
-    <script src="../sweetalert/sweetalert2.all.min.js"></script>
-    <script src="../date-picker/bootstrap-datepicker.js"></script>
+        <!-- jQuery -->
+        <script src="../plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- overlayScrollbars -->
+        <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="../dist/js/adminlte.min.js"></script>
+        <!-- OPTIONAL SCRIPTS -->
+        <script src="../dist/js/demo.js"></script>
+        <!-- DataTables -->
+        <script src="../plugins/datatables/jquery.dataTables.js"></script>
+        <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
 
-    <script>
-        $.validate();
-    </script>
+        <!-- PAGE PLUGINS -->
+        <!-- jQuery Mapael -->
+        <script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+        <script src="../plugins/raphael/raphael.min.js"></script>
+        <script src="../plugins/jquery-mapael/jquery.mapael.min.js"></script>
+        <script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
+        <!-- ChartJS -->
+        <script src="../plugins/chart.js/Chart.min.js"></script>
+        <!-- PAGE SCRIPTS -->
+        <script src="../dist/js/pages/dashboard2.js"></script>
+        <script src="../form-validator/jquery.form-validator.min.js"></script>
+        <script src="../form-validator/jquery.form-validator.js"></script>
+        <script src="../sweetalert/sweetalert2.all.min.js"></script>
+        <script src="../date-picker/bootstrap-datepicker.js"></script>
 
-    <script>
-        $('.datepicker').datepicker();
-    </script>
+        <script>
+            $.validate();
+        </script>
 
-    <script>
-        //SweetAlert
+        <script>
+            $('.datepicker').datepicker();
+        </script>
 
-        const sql = $('.sqlerror').data('sql')
-        if (sql) {
-            swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                confirmButtonColor: 'green',
-                text: 'SQL Error!',
-                closeOnEsc: false,
-                closeOnClickOutside: false,
-            })
-        }
-    </script>
+        <script>
+            //SweetAlert
 
-    <!-- page script -->
-    <script>
-        $(function() {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
+            const sql = $('.sqlerror').data('sql')
+            if (sql) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    confirmButtonColor: 'green',
+                    text: 'SQL Error!',
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                })
+            }
+        </script>
+
+        <!-- page script -->
+        <script>
+            $(function() {
+                $("#example1").DataTable();
+                $('#example2').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 
 </html>

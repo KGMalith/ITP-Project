@@ -1,3 +1,11 @@
+<?php
+include '../inc/expensesgroupid.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +56,7 @@
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -74,7 +82,7 @@
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -322,6 +330,15 @@
 
               <form action="../inc/addexpensegroup.php" method="POST">
 
+                <div class="form-group col-md-3">
+                  <label>Expenses Group ID<span class="requiredIcon" style="color:red;">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                    </div>
+                    <input type="text" class="form-control" name="expgrupid" value="<?php echo $expgroupid ?>" readonly>
+                  </div>
+                </div>
 
                 <div class="form-group col-4">
                   <label>Expense Group Name<span class="requiredIcon" style="color:red;">*</span></label>

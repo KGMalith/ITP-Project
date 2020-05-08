@@ -17,48 +17,39 @@
 
         if(!isset($_POST['check1']) && !isset($_POST['check2']) && !isset($_POST['check3']))
         {
-            header("Location: ../Item/Item.php?error=checkbox&name=".$name."&des=".$descrip."&iteID=".$item_ID);
+            header("Location: ../Item/ItemDetails.php?error=checkbox&name=".$name."&qun5=".$quan5kg. "&pri5=". $pri5kg . "&qun10=" . $quan10kg . "&pri10=" . $pri10kg . "&qun25=" . $quan25kg . "&pri25=" . $pri25kg . "&des=" . $descrip . "&iteID=" . $item_ID);
             exit();
         }
 
 
-        $sql = "SELECT iName FROM item WHERE iName=?";
-        $stmt = mysqli_stmt_init($con);
+        $sql = "SELECT iName FROM item WHERE iName='.$name.' AND itemID != '".$item_ID."'";
+        $result = mysqli_query($con,$sql);
 
-        if(!mysqli_stmt_prepare($stmt,$sql)){
-            header("Location: ../Item/Item.php?error=SQLError");
-            exit(); 
-        }
-        else{
-            mysqli_stmt_bind_param($stmt,"s",$name);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_store_result($stmt);
-            $resultCheck = mysqli_stmt_num_rows($stmt);
-            
-            if($resultCheck > 0){
-                header("Location: ../Item/Item.php?error=ItemTaken&qun5=".$quan5kg."&pri5=".$pri5kg."&qun10=".$quan10kg."&pri10=".$pri10kg."&qun25=".$quan25kg."&pri25=".$pri25kg."&des=".$descrip."&iteID=".$item_ID);
+        if($result){
+            if(mysqli_num_rows($result) > 0){
+            header("Location: ../Item/ItemDetails.php?error=ItemTaken&qun5=" . $quan5kg . "&pri5=" . $pri5kg . "&qun10=" . $quan10kg . "&pri10=" . $pri10kg . "&qun25=" . $quan25kg . "&pri25=" . $pri25kg . "&des=" . $descrip . "&iteID=" . $item_ID);
             exit();
-            }
-            else{
-            $sql = "UPDATE item SET iName=?,5KGQuantity=?,5KGPrice=?,10KGQuantity=?,10KGPrice=?,25KGQuantity=?,25KGPrice=?,description=? WHERE itemID={}";
-                $stmt = mysqli_stmt_init($con);
+            }else{
+                $sql = "UPDATE item SET iName='$name',5KGQuantity='$quan5kg',5KGPrice='$pri5kg',10KGQuantity='$quan10kg',10KGPrice='$pri10kg',25KGQuantity='$quan25kg',25KGPrice='$pri25kg',description='$descrip' WHERE itemID='".$item_ID."'";
+                $result = mysqli_query($con,$sql);
 
-                if(!mysqli_stmt_prepare($stmt,$sql)){
-                    header("Location: ../Item/Item.php?error=SQLError");
-                    exit();
-                }
-                else{
-                    mysqli_stmt_bind_param($stmt,"ssssssss",$name,$quan5kg,$pri5kg,$quan10kg,$pri10kg,$quan25kg,$pri25kg,$descrip);
-                    mysqli_stmt_execute($stmt);
-                    header("Location: ../Item/ItemTable.php?Update=Success");
-                    exit();
+                if($result){
+                header("Location: ../Item/ItemTable.php?Update=Success");
+                exit();
+                }else{
+                header("Location: ../Item/ItemDetails.php?error=SQLError");
+                exit();
                 }
 
+             
+
             }
-            
+
+        }else{
+        header("Location: ../Item/ItemDetails.php?error=SQLError");
+        exit(); 
         }
-        mysqli_stmt_close($stmt);
-        mysqli_close($con);
+
 
     }
 

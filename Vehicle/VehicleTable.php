@@ -1,9 +1,16 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 require '../inc/dbconnect.php';
 
 
 //getting the list of users
-$query = "SELECT v.VehicleID,v.VRegistrationNo,v.Status,v.VOwner,vt.V_typeName,e.name FROM employee e, vehicletype vt,vehicle v WHERE e.id = v.id AND vt.V_typeId = v.V_typeId";
+$query = "SELECT v.VehicleID,v.VehID,v.VRegistrationNo,v.Status,v.VOwner,vt.V_typeName,e.name FROM employee e, vehicletype vt,vehicle v WHERE e.id = v.id AND vt.V_typeId = v.V_typeId";
 $vehicles = mysqli_query($con, $query);
 
 ?>
@@ -57,7 +64,7 @@ $vehicles = mysqli_query($con, $query);
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="../Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -83,7 +90,7 @@ $vehicles = mysqli_query($con, $query);
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -336,7 +343,8 @@ $vehicles = mysqli_query($con, $query);
                                     <table id="example1" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th style="width: 20%">Vehicle Registration No</th>
+                                                <th style="width: 12%">Vehicle ID</th>
+                                                <th style="width: 18%">Vehicle Registration No</th>
                                                 <th style="width: 12%">Vehicle Type</th>
                                                 <th>Driver Name</th>
                                                 <th style="width: 12%">Owner</th>
@@ -348,6 +356,7 @@ $vehicles = mysqli_query($con, $query);
                                             <?php
                                             while ($row = mysqli_fetch_assoc($vehicles)) {
                                                 $VehicleID = $row['VehicleID'];
+                                                $vehcid = $row['VehID'];
                                                 $RegistrationNo = $row['VRegistrationNo'];
                                                 $VType = $row['V_typeName'];
                                                 $DriverName = $row['name'];
@@ -356,6 +365,7 @@ $vehicles = mysqli_query($con, $query);
                                             ?>
 
                                                 <tr>
+                                                    <td><?php echo $vehcid ?></td>
                                                     <td><?php echo $RegistrationNo ?></td>
                                                     <td><?php echo $VType ?></td>
                                                     <td><?php echo $DriverName ?></td>
@@ -480,7 +490,7 @@ $vehicles = mysqli_query($con, $query);
                     swal.fire({
                         icon: 'error',
                         title: 'Cancelled',
-                        text: 'Customer Detail is Not Deleted',
+                        text: 'Vehicle Detail is Not Deleted',
                         confirmButtonColor: 'green',
 
                     })
@@ -506,7 +516,7 @@ $vehicles = mysqli_query($con, $query);
                 icon: 'success',
                 title: 'Success!',
                 confirmButtonColor: 'green',
-                text: 'Customer Details are Updated Successfully.',
+                text: 'Vehicle Details are Updated Successfully.',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -529,7 +539,7 @@ $vehicles = mysqli_query($con, $query);
                 icon: 'error',
                 title: 'Oops...',
                 confirmButtonColor: 'green',
-                text: 'Customer Not Found!',
+                text: 'Vehicle Not Found!',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })

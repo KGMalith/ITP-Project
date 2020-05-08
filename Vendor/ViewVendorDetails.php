@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 
 $vendor_id = "";
@@ -11,6 +18,7 @@ if (isset($_GET['vendorid'])) {
   if ($resultset) {
     if (mysqli_num_rows($resultset) == 1) {
       $result = mysqli_fetch_assoc($resultset);
+      $venID = $result['VenID'];
       $VendorName = $result['vName'];
       $VendorMNumber = $result['vMNumber'];
       $VendorLNumber = $result['vLNumber'];
@@ -80,7 +88,7 @@ if (isset($_GET['vendorid'])) {
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -105,7 +113,7 @@ if (isset($_GET['vendorid'])) {
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
         <!-- Sidebar Menu -->
@@ -342,7 +350,16 @@ if (isset($_GET['vendorid'])) {
 
 
                   <form method="POST">
-                    <div class="form-group">
+                    <div class="form-group col-md-3">
+                      <label>VendorID<span class="requiredIcon" style="color:red;">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
+                        </div>
+                        <input type="text" class="form-control" name="venID" value="<?php echo $venID ?>" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group ml-2">
                       <label>Full Name<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -352,7 +369,7 @@ if (isset($_GET['vendorid'])) {
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-3">
                         <label>Phone (Mobile)<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">
@@ -381,7 +398,7 @@ if (isset($_GET['vendorid'])) {
                         </div>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group ml-2">
                       <label>Address<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -390,7 +407,7 @@ if (isset($_GET['vendorid'])) {
                         <input type="text" class="form-control" name="address" value="<?php echo $VendorAddress; ?>" disabled>
                       </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-6">
                         <label>City<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">

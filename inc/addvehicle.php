@@ -3,6 +3,7 @@ include 'dbconnect.php';
 
 if(isset($_POST['addvehicle'])){
 
+    $vehid = mysqli_real_escape_string($con,$_POST['vehiID']);
     $RegistrationNo = mysqli_real_escape_string($con,$_POST['registerno']);
     $ModelNO = mysqli_real_escape_string($con, $_POST['modelno']);
     $ChassisNo = mysqli_real_escape_string($con, $_POST['chasisno']);
@@ -43,11 +44,11 @@ if(isset($_POST['addvehicle'])){
     $query = "SELECT ChassisNo FROM vehicle WHERE ChassisNo='".$ChassisNo."'";
     $results = mysqli_query($con,$query);
     if(mysqli_num_rows($results) > 0){
-        header("Location: ../Vehicle/AddVehicle.php?error=chassynotaken&modelNo=" . $ModelNO . "&EngineNo=" . $EngineNo . "&owner=" . $Owner . "&stats=" . $Status);
+        header("Location: ../Vehicle/AddVehicle.php?error=chassynotaken&regno=". $RegistrationNo."&modelNo=" . $ModelNO . "&EngineNo=" . $EngineNo . "&owner=" . $Owner . "&stats=" . $Status);
         exit();
     }
 
-    $sql = "INSERT INTO vehicle (VRegistrationNo,ModelNo,ChassisNo,EngineNo,V_typeId,id,VOwner,Status) VALUES('$RegistrationNo','$ModelNO','$ChassisNo','$EngineNo','$VehicleType','$Driver','$Owner','$Status')";
+    $sql = "INSERT INTO vehicle (VehID,VRegistrationNo,ModelNo,ChassisNo,EngineNo,V_typeId,id,VOwner,Status) VALUES('$vehid','$RegistrationNo','$ModelNO','$ChassisNo','$EngineNo','$VehicleType','$Driver','$Owner','$Status')";
     $result = mysqli_query($con,$sql);
 
     if($result){

@@ -1,3 +1,11 @@
+<?php
+include '../inc/Customeridgenerator.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,7 +55,7 @@
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -60,7 +68,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
 
@@ -72,7 +80,7 @@
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -347,7 +355,16 @@
                   <?php endif;  ?>
 
                   <form action="../inc/addcustomer.php" method="POST">
-                    <div class="form-group">
+                    <div class="form-group col-md-3">
+                      <label>Customer ID<span class="requiredIcon" style="color:red;">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
+                        </div>
+                        <input type="text" class="form-control" name="customerID" value="<?php echo $cutomerid ?>" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group ml-2">
                       <label>Name<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -357,7 +374,7 @@
                       </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-3">
                         <label>Phone (Mobile)<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">
@@ -410,7 +427,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group ml-2">
                       <label>Address<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -427,7 +444,7 @@
 
                       </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row ml-1">
                       <div class="form-group col-md-6">
                         <label>City<span class="requiredIcon" style="color:red;">*</span></label>
                         <div class="input-group">

@@ -1,3 +1,11 @@
+<?php
+include '../../inc/leavetypeidgenerator.php';
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +56,7 @@
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -74,7 +82,7 @@
                         <img src="../../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -326,7 +334,16 @@
                                 <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
                             <?php endif;  ?>
 
-                            <form action="../../inc/addleavetype.php" method="POST" enctype="multipart/form-data">
+                            <form action="../../inc/addleavetype.php" method="POST">
+                                <div class="form-group col-md-3">
+                                    <label>Leave Type ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="leavtypID" value="<?php echo $leavetypid ?>" readonly>
+                                    </div>
+                                </div>
 
                                 <div class="form-row ml-1">
 
@@ -441,7 +458,7 @@
             <div id="foot">
                 <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
                 <div class="float-right d-none d-sm-inline-block img_div">
-                    <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
+                    <b>Powered By</b> <img src="../../dist/img/3.png" alt="User Image">
                 </div>
             </div>
         </footer>

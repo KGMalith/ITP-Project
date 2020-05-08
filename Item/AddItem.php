@@ -1,3 +1,11 @@
+<?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +57,7 @@
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -75,7 +83,7 @@
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -120,11 +128,26 @@
             </li>
 
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+            <li class="nav-item has-treeview menu-open">
+              <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-boxes"></i>
                 <p>Stock Management</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview ">
+                <li class="nav-item">
+                  <a href="Item/ItemTable.php" class="nav-link active">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Item Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Stock Management</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item has-treeview">

@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 require '../inc/dbconnect.php';
 
 
@@ -57,7 +64,7 @@ $expgroup = mysqli_query($con, $query);
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="../Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -83,7 +90,7 @@ $expgroup = mysqli_query($con, $query);
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -338,6 +345,7 @@ $expgroup = mysqli_query($con, $query);
                                     <table id="example1" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
+                                                <th style="width: 12%">Expenses Group ID</th>
                                                 <th>Expense Group Name</th>
                                                 <th>Description</th>
                                                 <th class="text-center" style="width: 10%">Actions</th>
@@ -347,12 +355,14 @@ $expgroup = mysqli_query($con, $query);
                                             <?php
                                             while ($row = mysqli_fetch_assoc($expgroup)) {
                                                 $id = $row['ExpGID'];
+                                                $exgid = $row['ExpGroupID'];
                                                 $GroupName = $row['ExpGName'];
                                                 $Descrip = $row['Descrip'];
 
                                             ?>
 
                                                 <tr>
+                                                    <td><?php echo $exgid ?></td>
                                                     <td><?php echo $GroupName ?></td>
                                                     <td><?php echo $Descrip ?></td>
                                                     <td class="text-center">
@@ -456,7 +466,7 @@ $expgroup = mysqli_query($con, $query);
                     swal.fire({
                         icon: 'error',
                         title: 'Cancelled',
-                        text: 'Expense group Detail is Not Deleted',
+                        text: 'Expense Group Detail is Not Deleted',
                         confirmButtonColor: 'green',
 
                     })

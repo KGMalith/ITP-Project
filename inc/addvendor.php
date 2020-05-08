@@ -3,6 +3,7 @@
 
         require 'dbconnect.php';
 
+        $venID = mysqli_real_escape_string($con,$_POST['venID']);
         $name = mysqli_real_escape_string($con,$_POST['vname']);
         $mobile = mysqli_real_escape_string($con,$_POST['mnumber']);
         $land = mysqli_real_escape_string($con,$_POST['lnumber']);
@@ -47,7 +48,7 @@
             exit();
             }
             else{
-                $sql = "INSERT INTO vendor(vName,vMNumber,vLNumber,vEmail,vAddress,vCity,vDistrict) VALUES(?,?,?,?,?,?,?)";
+                $sql = "INSERT INTO vendor(VenID,vName,vMNumber,vLNumber,vEmail,vAddress,vCity,vDistrict) VALUES(?,?,?,?,?,?,?,?)";
                 $stmt = mysqli_stmt_init($con);
 
                 if(!mysqli_stmt_prepare($stmt,$sql)){
@@ -55,7 +56,7 @@
                     exit();
                 }
                 else{
-                    mysqli_stmt_bind_param($stmt,"sssssss",$name,$mobile,$land,$mail,$address,$city,$district);
+                    mysqli_stmt_bind_param($stmt,"ssssssss",$venID,$name,$mobile,$land,$mail,$address,$city,$district);
                     mysqli_stmt_execute($stmt);
                     header("Location: ../Vendor/AddVendorDetails.php?Register=Success");
                     exit();

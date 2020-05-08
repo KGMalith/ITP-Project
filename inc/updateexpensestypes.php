@@ -12,11 +12,11 @@ if(isset($_POST['updateexpensetype'])){
         exit();
     }
 
-    $sql = "SELECT ExpTName FROM expensetype WHERE ExpTName='.$Typename.' AND ExpTID != '.$Typeid.'";
+    $sql = "SELECT ExpTName FROM expensetype WHERE ExpTName='$Typename' AND ExpTID != '$Typeid'";
     $result = mysqli_query($con, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        header("Location: ../Expenses/ExpensesTypes.php?error=nametaken&id=".$Typeid);
+        header("Location: ../Expenses/ExpensesTypes.php?error=nametaken&id=".$Typeid. "&exname=". $Typename);
         exit();
     }
 

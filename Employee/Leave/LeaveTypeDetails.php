@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
+?>
+<?php
 include '../../inc/dbconnect.php';
 if (isset($_GET['Lid'])) {
     $id = $_GET['Lid'];
@@ -6,6 +13,7 @@ if (isset($_GET['Lid'])) {
     $resultset = mysqli_query($con, $query);
     if ($resultset) {
         $row = mysqli_fetch_assoc($resultset);
+        $levtid = $row['leaveTypeId'];
         $lname = $row['LeaveName'];
         $etype = $row['EmpType'];
         $noofdays = $row['NoofDays'];
@@ -69,7 +77,7 @@ if (isset($_GET['Lid'])) {
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -95,7 +103,7 @@ if (isset($_GET['Lid'])) {
                         <img src="../../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
                 <!-- Sidebar Menu -->
@@ -348,9 +356,26 @@ if (isset($_GET['Lid'])) {
 
                             <form action="../../inc/updateleavetype.php" method="POST" enctype="multipart/form-data">
 
+                                <div class="form-group col-md-3">
+                                    <label>Leave Type ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                        </div>
+                                        <?php
+                                        if (isset($_GET['letypid'])) {
+                                            $leavTypeid = $_GET['letypid'];
+                                            echo '<input type="text" class="form-control" name="leavtypID" value="' . $leavTypeid . '" readonly>';
+                                        } else {
+                                            echo '<input type="text" class="form-control" name="leavtypID" value="' . $levtid . '" readonly>';
+                                        }
+
+                                        ?>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-row ml-1">
-
-
                                     <div class="form-group col-4">
                                         <label>Leave Name<span class="requiredIcon" style="color:red;">*</span></label>
                                         <div class="input-group">
@@ -470,7 +495,7 @@ if (isset($_GET['Lid'])) {
             <div id="foot">
                 <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
                 <div class="float-right d-none d-sm-inline-block img_div">
-                    <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
+                    <b>Powered By</b> <img src="../../dist/img/3.png" alt="User Image">
                 </div>
             </div>
         </footer>

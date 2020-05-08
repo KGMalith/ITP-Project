@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 include '../inc/dbconnect.php';
 if (isset($_GET['Gid'])) {
     $GID = mysqli_real_escape_string($con, $_GET['Gid']);
@@ -9,6 +16,7 @@ if (isset($_GET['Gid'])) {
         if (mysqli_num_rows($result) == 1) {
 
             $row = mysqli_fetch_assoc($result);
+            $groupid = $row['ExpGroupID'];
             $groupname = $row['ExpGName'];
             $groupdesc = $row['Descrip'];
         } else {
@@ -72,7 +80,7 @@ if (isset($_GET['Gid'])) {
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -98,7 +106,7 @@ if (isset($_GET['Gid'])) {
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -346,6 +354,22 @@ if (isset($_GET['Gid'])) {
 
                             <form action="../inc/updateexpensesgroup.php" method="POST">
 
+                                <div class="form-group col-md-3">
+                                    <label>Expenses Group ID<span class="requiredIcon" style="color:red;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        </div>
+                                        <?php
+                                        if (isset($_GET['gid'])) {
+                                            $exgid = $_GET['gid'];
+                                            echo '<input type="text" class="form-control" name="expgrupid" value="' . $exgid . '" readonly>';
+                                        } else {
+                                            echo '<input type="text" class="form-control" name="expgrupid" value="' . $groupid . '" readonly>';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
 
                                 <div class="form-group col-4">
                                     <label>Expense Group Name<span class="requiredIcon" style="color:red;">*</span></label>

@@ -1,4 +1,11 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
+?>
+<?php
 require '../inc/dbconnect.php';
 
 
@@ -57,7 +64,7 @@ $vtypes = mysqli_query($con, $query);
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="../Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -83,7 +90,7 @@ $vtypes = mysqli_query($con, $query);
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -336,8 +343,8 @@ $vtypes = mysqli_query($con, $query);
                                     <table id="example1" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th style="width: 20%">Vehicle Type Name</th>
-                                                <th>Description</th>
+                                                <th style="width: 15%">Vehicle Type ID</th>
+                                                <th>Vehicle Type Name</th>
                                                 <th class="text-center" style="width: 10%">Actions</th>
                                             </tr>
                                         </thead>
@@ -345,14 +352,14 @@ $vtypes = mysqli_query($con, $query);
                                             <?php
                                             while ($row = mysqli_fetch_assoc($vtypes)) {
                                                 $id = $row['V_typeId'];
+                                                $vetyid = $row['vehicleTId'];
                                                 $VtypeName = $row['V_typeName'];
-                                                $Descrip = $row['V_typeDesc'];
 
                                             ?>
 
                                                 <tr>
+                                                    <td><?php echo $vetyid ?></td>
                                                     <td><?php echo $VtypeName ?></td>
-                                                    <td><?php echo $Descrip ?></td>
                                                     <td class="text-center">
                                                         <div class="btn-group btn-group-sm">
                                                             <a href="VehicleTypeDetails.php?VTid=<?php echo $id  ?>"><button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -455,7 +462,7 @@ $vtypes = mysqli_query($con, $query);
                     swal.fire({
                         icon: 'error',
                         title: 'Cancelled',
-                        text: 'Customer Detail is Not Deleted',
+                        text: 'Vehicle Type is Not Deleted',
                         confirmButtonColor: 'green',
 
                     })
@@ -481,7 +488,7 @@ $vtypes = mysqli_query($con, $query);
                 icon: 'success',
                 title: 'Success!',
                 confirmButtonColor: 'green',
-                text: 'Customer Details are Updated Successfully.',
+                text: 'Vehicle Type Details are Updated Successfully.',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })
@@ -504,7 +511,7 @@ $vtypes = mysqli_query($con, $query);
                 icon: 'error',
                 title: 'Oops...',
                 confirmButtonColor: 'green',
-                text: 'Customer Not Found!',
+                text: 'Vehicle Type Not Found!',
                 closeOnEsc: false,
                 closeOnClickOutside: false,
             })

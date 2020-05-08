@@ -556,14 +556,7 @@ $out .= '<option value="YES">YES</option>
         $("#" + delete_row).remove();
       });
 
-      $(document).on('change', '#itemQuantity', function() {
-        var itemquantity = $(this).data('row').val();
-        var itemprice = $('#itemPrice').data('row').val();
-        var actualamount;
-
-        actualamount = itemprice * itemquantity;
-        $('#itemActualAmount').html("<td><input type = 'text' class ='form-control' name='itemActualAmount' id='itemActualAmount' value='actualamount' readonly></td>");
-      })
+      
 
     });
   </script>
