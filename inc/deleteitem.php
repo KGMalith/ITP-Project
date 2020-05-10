@@ -5,7 +5,7 @@
     if(isset($_GET['itemid'])){
         
         $ItemId = $_GET['itemid'];   
-        $query = "DELETE FROM item WHERE itemID = '".$ItemId."' ";
+        $query = "DELETE FROM items WHERE I_ID = '".$ItemId."' ";
         $result = mysqli_query($con,$query);
 
         if($result){

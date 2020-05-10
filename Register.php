@@ -40,7 +40,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 
   <div class="register-box mt-5">
     <div class="register-logo">
-      <img src="dist/img/RICE.jpg" alt="Avatar" class="avatar img-fluid"><br />
+      <img src="dist/img/RICE.jpg" alt="CompanyLogo" class="avatar img-fluid"><br />
       <b>Nuwan Rice Mill </b>
     </div>
 

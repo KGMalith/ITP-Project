@@ -73,7 +73,7 @@ include '../inc/dbconnect.php';
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
 
@@ -122,11 +122,27 @@ include '../inc/dbconnect.php';
               </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-file-invoice"></i>
                 <p>Billing</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Billing/BuyingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Buying Invoice</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Billing/SellingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Selling Invoice</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
 
@@ -524,7 +540,7 @@ include '../inc/dbconnect.php';
                       <div class="form-group">
                         <select class="form-control" name="vehicleowner">
                           <?php
-                            echo '
+                          echo '
                                         <option value="Select" selected disabled>--SELECT--</option>
                                         <option value="Company">Company</option>
                                         <option value="Hire">Hire</option>';
@@ -546,7 +562,7 @@ include '../inc/dbconnect.php';
                     <div class="form-group">
                       <select class="form-control" name="vehiclestatus">
                         <?php
-                          echo '
+                        echo '
                                       <option value="Select" selected disabled>--SELECT--</option>
                                       <option value="Active">Active</option>
                                       <option value="Inactive">Inactive</option>

@@ -1,10 +1,10 @@
 <?php
     include 'dbconnect.php';
 
-    $query = "SELECT * FROM riceorder ORDER BY InvoiveID DESC LIMIT 1";
+    $query = "SELECT * FROM buyinginvoicelist ORDER BY BInvoiceID DESC LIMIT 1";
     $result = mysqli_query($con,$query);
     $row = mysqli_fetch_array($result);
-    $lastid = $row['InvoiveID'];
+    $lastid = $row['BInvoiceID'];
 
     if($lastid == ''){
         $binvoiceid = "BINVOICE1";

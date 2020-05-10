@@ -1,7 +1,13 @@
 <?php
 require '../inc/dbconnect.php';
 
-$sql = "SELECT * FROM buyinginvoice";
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
+
+$sql = "SELECT b.id, b.BInvoiceID,b.orderDate,b.finalAmount,v.vendorID,v.VenID,v.vName FROM buyinginvoicelist b,vendor v WHERE b.vendorid = v.vendorID";
 $state = mysqli_stmt_init($con);
 mysqli_stmt_prepare($state, $sql);
 mysqli_stmt_execute($state);
@@ -54,7 +60,7 @@ $results = mysqli_stmt_get_result($state);
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -68,7 +74,7 @@ $results = mysqli_stmt_get_result($state);
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
 
@@ -80,7 +86,7 @@ $results = mysqli_stmt_get_result($state);
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -90,18 +96,56 @@ $results = mysqli_stmt_get_result($state);
             <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="../index.php" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>Dashboard</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="../Order/OrderTable.php" class="nav-link">
                 <i class="nav-icon fas fa-shopping-basket"></i>
                 <p>Order Management</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="../Customer/CustomerTable.php" class="nav-link">
+                <i class="nav-icon fas fa-hand-holding-usd"></i>
+                <p>Customer Management</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="../Vendor/VendorTable.php" class="nav-link">
+                <i class="nav-icon fas fa-handshake"></i>
+                <p>Vendor Management</p>
+              </a>
+            </li>
+
+            <li class="nav-item has-treeview menu-open">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-file-invoice"></i>
+                <p>Billing</p>
+                <i class="right fas fa-angle-left"></i>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Billing/BuyingInvoiceList.php" class="nav-link active">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Buying Invoice</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Billing/SellingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Selling Invoice</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
 
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -110,43 +154,118 @@ $results = mysqli_stmt_get_result($state);
               </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-file-invoice"></i>
-                <p>Billing</p>
+                <i class="nav-icon fas fa-truck-loading"></i>
+                <p>Transport Handling</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Transport/TransportActionTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Transport Action</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Transport/TransportHandlingTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Transport Handling</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="" class="nav-link">
                 <i class="nav-icon fas fa-coins"></i>
                 <p>Expenses Tracking</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Expenses/ExpensesGroupTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Expense Group</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Expenses/ExpensesTypeTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Expense Type</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Expenses/ExpenseTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Expenses Details</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-balance-scale"></i>
-                <p>Financial Handling</p>
+              <a href="" class="nav-link">
+                <i class="nav-icon fas fa-truck-moving"></i>
+                <p>Vehicle Management
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Vehicle/VehicleTypeTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-truck-pickup"></i>
+                    <p>Vehicle Types</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Vehicle/VehicleTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-truck-pickup"></i>
+                    <p>Vehicles</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-line"></i>
-                <p>Sales Forecasting</p>
-              </a>
-            </li>
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+            <li class="nav-item has-treeview">
+              <a href="" class="nav-link">
                 <i class="nav-icon fas fa-users"></i>
-                <p>Employee Management</p>
+                <p>Employee Management
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Employee/EmployeeTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-user-friends"></i>
+                    <p>Employee Details</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Employee/Leave/LeaveManagementTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-bed"></i>
+                    <p>Employee Leave Details</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Employee/Leave/LeaveTypeTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-bed"></i>
+                    <p>Leave Details</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
+              <a href="" class="nav-link">
                 <i class="nav-icon fas fa-angle-double-down"></i>
                 <p>
                   Options
@@ -155,15 +274,15 @@ $results = mysqli_stmt_get_result($state);
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                  <a href="../Change-password.php" class="nav-link">
+                    <i class="nav-icon fas fa-key"></i>
                     <p>Change Password</p>
                   </a>
                 </li>
 
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                  <a href="../Register.php" class="nav-link">
+                    <i class="nav-icon fas fa-user-plus"></i>
                     <p>Add User</p>
                   </a>
                 </li>
@@ -206,10 +325,27 @@ $results = mysqli_stmt_get_result($state);
                 <div class="card-header" id="cus">
                   <h5 class="card-title">Buying Invoice List</h5>
                   <div class="card-tools">
-                    <a href="invoice.php?add=1"><button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Print">Create</button></a>
+                    <a href="buypaddy.php"><button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="Print">Create</button></a>
                   </div>
                 </div>
                 <div class="card-body">
+
+                  <?php if (isset($_GET['error']))
+                    if ($_GET['error'] == "Success") : ?>
+                    <div class="invoicecreated" data-invoice="<?= $_GET['Success']; ?>"></div>
+                  <?php endif;  ?>
+
+                  <?php if (isset($_GET['error']))
+                    if ($_GET['error'] == "SQLError") : ?>
+                    <div class="sqlerror" data-sql="<?= $_GET['SQLError']; ?>"></div>
+                  <?php endif;  ?>
+
+                  <?php if (isset($_GET['delete']))
+                    if ($_GET['delete'] == "Success") : ?>
+                    <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
+                  <?php endif;  ?>
+
+
                   <table table id="example1" class="table table-bordered table-hover table-responsive-sm">
                     <thead>
                       <tr>
@@ -217,8 +353,8 @@ $results = mysqli_stmt_get_result($state);
                         <th>Invoice Date</th>
                         <th>Receiver Name</th>
                         <th>Invoice Total</th>
-                        <th>PDF</th>
-                        <th class="text-center">Actions</th>
+                        <th style="width:8%">Invoice</th>
+                        <th class="text-center" style="width:10%">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -227,20 +363,18 @@ $results = mysqli_stmt_get_result($state);
 
                         echo '
                               <tr>
-                                <td>' . $result["b_order_no"] . '</td>
-                                <td>' . $result["b_order_date"] . '</td>
+                                <td>' . $result["BInvoiceID"] . '</td>
+                                <td>' . $result["orderDate"] . '</td>
                                 <td>' . $result["vName"] . '</td>
-                                <td>' . $result["t_price"] . '</td>
+                                <td>' . $result["finalAmount"] . '</td>
                                 <td class="text-center">
-                                <a href="../inc/deletecustomer.php?pdf=1&id=' . $result["border_id"] . '"><button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="PDF">
+                                <a href="buyingInvoice.php?&byninvid=' . $result["id"] . '"><button type="button" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="PDF">
                                   <i class="fas fa-file-pdf"></i>
                                 </button></a>
                                 </td>
                                 <td class="text-center">
-                                <a href="buyinginvoiceList.php?update=1&id=' . $result["border_id"] . '"><button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">
-                                  <i class="fas fa-edit"></i>
-                                </button></a> &nbsp;
-                                <a href="../inc/deletecustomer.php?id=' . $result["border_id"] . '" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                
+                                <a href="../inc/deletebuyinginvoice.php?id=' . $result["id"] . '" class="btn-del"><button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
                                   <i class="fas fa-trash-alt"></i>
                                 </button></a>
                                 
@@ -248,6 +382,9 @@ $results = mysqli_stmt_get_result($state);
                               </tr>
                             ';
                       ?>
+                        <!-- <a href="buyinginvoiceList.php?update=1&id=' . $result[" id"] . '"><button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">
+                                  <i class="fas fa-edit"></i>
+                                </button></a> &nbsp; -->
                     </tbody>
                   <?php
                       }
@@ -300,11 +437,12 @@ $results = mysqli_stmt_get_result($state);
   <script src="../plugins/chart.js/Chart.min.js"></script>
   <!-- PAGE SCRIPTS -->
   <script src="../dist/js/pages/dashboard2.js"></script>
+  <script src="../sweetalert/sweetalert2.all.min.js"></script>
   <!-- page script -->
   <script>
     $(function() {
       $("#example1").DataTable();
-      $('#example2').DataTable({
+      $(' #example2').DataTable({
         "paging": true,
         "lengthChange": false,
         "searching": false,
@@ -322,7 +460,78 @@ $results = mysqli_stmt_get_result($state);
       });
     });
   </script>
-  
+  <script>
+    $('.btn-del').on('click', function(e) {
+      e.preventDefault();
+      const href = $(this).attr('href')
+
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Delete it!',
+        confirmButtonColor: 'green',
+        cancelButtonText: 'No, Cancel!',
+        cancelButtonColor: '#d33',
+        reverseButtons: true
+
+      }).then((result) => {
+        if (result.value) {
+          document.location.href = href;
+        } else if (
+
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swal.fire({
+            icon: 'error',
+            title: 'Cancelled',
+            text: 'Buying Invoice Not Deleted',
+            confirmButtonColor: 'green',
+
+          })
+        }
+      })
+
+
+    })
+
+    const invoice = $('.invoicecreated').data('invoice')
+    if (invoice) {
+      swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        confirmButtonColor: 'green',
+        text: 'Buying Invoice Created Successfully.',
+        closeOnEsc: false,
+        closeOnClickOutside: false,
+      })
+    }
+
+    flashdata = $('.flash-data').data('flashdata')
+    if (flashdata) {
+      swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: 'Record has been Deleted.',
+        confirmButtonColor: 'green',
+      })
+    }
+
+    sql = $('.sqlerror').data('sql')
+    if (sql) {
+      swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        confirmButtonColor: 'green',
+        text: 'SQL Error!',
+        closeOnEsc: false,
+        closeOnClickOutside: false,
+      })
+    }
+  </script>
+
 </body>
 
 </html>

@@ -1,9 +1,5 @@
 <?php
-SESSION_START();
-
-if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
-  header("Location: ../Login.php");
-}
+include '../inc/itemidgenerator.php';
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +67,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
 
@@ -120,11 +116,27 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
               </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-file-invoice"></i>
                 <p>Billing</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Billing/BuyingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Buying Invoice</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Billing/SellingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Selling Invoice</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
 
@@ -350,7 +362,16 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 
 
                   <form action="../inc/additem.php" method="POST">
-                    <div class="form-group">
+                    <div class="form-group col-md-3">
+                      <label>Item ID<span class="requiredIcon" style="color:red;">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-box-open"></i></span>
+                        </div>
+                        <input type="text" class="form-control" name="itemid" value="<?php echo $itemid ?>" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4">
                       <label>Item Name<span class="requiredIcon" style="color:red;">*</span></label>
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -366,169 +387,6 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
                         ?>
 
                       </div>
-                    </div>
-
-                    <div class="form-row">
-                      <div class="form-group col-md-3">
-                        <label>Bag Sizes<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="form-group clearfix">
-                          <div class="icheck-primary d-inline">
-                            <?php
-                            if (isset($_GET['che1'])) {
-
-                              echo '<input type="checkbox" id="checkboxPrimary1" name="check1"data-validation-optional="true" checked>';
-                            } else {
-                              echo '<input type="checkbox" id="checkboxPrimary1" name="check1"data-validation-optional="true">';
-                            }
-                            ?>
-
-                            <label for="checkboxPrimary1">
-                              5KG
-                            </label>
-                          </div>
-                          &nbsp;&nbsp;&nbsp;
-                          <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="checkboxPrimary2" name="check2" data-validation-optional="true">
-                            <label for="checkboxPrimary2">
-                              10KG
-                            </label>
-                          </div>
-                          &nbsp;&nbsp;&nbsp;
-                          <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="checkboxPrimary3" name="check3" data-validation-optional="true">
-                            <label for="checkboxPrimary3">
-                              25KG
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-md-3">
-                        <label>Quantity (5KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['qun5'])) {
-                            $quantity5 = $_GET['qun5'];
-                            echo '<input type="text" class="form-control" name="qun5" id="small" data-validation-optional="true" data-validation="number " data-validation-error-msg="Please Enter Quantity" value="' . $quantity5 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="qun5" id="small" data-validation-optional="true" data-validation="number " data-validation-error-msg="Please Enter Quantity" disabled>';
-                          }
-                          ?>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label>Unit Price (5KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['pri5'])) {
-                            $price5 = $_GET['pri5'];
-                            echo '<input type="text" class="form-control" name="pri5" id="small1" data-validation-optional="true" data-validation="number" data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" value="' . $price5 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="pri5" id="small1" data-validation-optional="true" data-validation="number" data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" disabled>';
-                          }
-                          ?>
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-md-3">
-                        <label>Quantity (10KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['qun10'])) {
-                            $quantity10 = $_GET['qun10'];
-                            echo '<input type="text" class="form-control" name="qun10" id="medium" data-validation-optional="true" data-validation="number" data-validation-error-msg="Please Enter Quantity" value="' . $quantity10 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="qun10" id="medium" data-validation-optional="true" data-validation="number" data-validation-error-msg="Please Enter Quantity" disabled>';
-                          }
-                          ?>
-
-                        </div>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label>Unit Price (10KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['pri10'])) {
-                            $price10 = $_GET['pri10'];
-                            echo '<input type="text" class="form-control" name="pri10" id="medium1" data-validation-optional="true" data-validation="number" data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" value="' . $price10 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="pri10" id="medium1" data-validation-optional="true" data-validation="number" data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" disabled>';
-                          }
-                          ?>
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="form-group col-md-3">
-                        <label>Quantity (25KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['qun25'])) {
-                            $quantity25 = $_GET['qun25'];
-                            echo '<input type="text" class="form-control" name="qun25" id="large" data-validation-optional="true" data-validation="number" data-validation-error-msg="Please Enter Quantity" value="' . $quantity25 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="qun25" id="large" data-validation-optional="true" data-validation="number" data-validation-error-msg="Please Enter Quantity" disabled>';
-                          }
-                          ?>
-
-                        </div>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label>Unit Price (25KG)<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                          </div>
-                          <?php
-                          if (isset($_GET['pri25'])) {
-                            $price25 = $_GET['pri25'];
-                            echo '<input type="text" class="form-control" name="pri25" id="large1" data-validation-optional="true" data-validation="number " data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" value="' . $price25 . '" disabled>';
-                          } else {
-                            echo '<input type="text" class="form-control" name="pri25" id="large1" data-validation-optional="true" data-validation="number " data-validation-allowing="float"  data-validation-error-msg="Please Enter Price" disabled>';
-                          }
-                          ?>
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>Description</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-keyboard"></i></span>
-                        </div>
-                        <?php
-                        if (isset($_GET['des'])) {
-                          $description = $_GET['des'];
-                          echo '<input type="text" class="form-control" id="area" name="des" value="' . $description . '">';
-                        } else {
-                          echo '<input type="text" class="form-control" id="area" name="des">';
-                        }
-                        ?>
-
-                      </div>
-                      <p>
-                        <b>(<span id="maxlength" style="color:red;">150</span> characters left)</b>
-                      </P>
                     </div>
                     <br>
                     <button type="submit" id="addCustomer" name="addItem" class="btn btn-success">Add Item</button>
@@ -640,21 +498,6 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
   </script>
 
   <script>
-    document.getElementById('checkboxPrimary1').onchange = function() {
-      document.getElementById('small').disabled = !this.checked;
-      document.getElementById('small1').disabled = !this.checked;
-    };
-    document.getElementById('checkboxPrimary2').onchange = function() {
-      document.getElementById('medium').disabled = !this.checked;
-      document.getElementById('medium1').disabled = !this.checked;
-    };
-    document.getElementById('checkboxPrimary3').onchange = function() {
-      document.getElementById('large').disabled = !this.checked;
-      document.getElementById('large1').disabled = !this.checked;
-    };
-
-
-
     $.validate();
 
     $('#area').restrictLength($('#maxlength'));

@@ -1,26 +1,53 @@
 <?php
 include '../inc/dbconnect.php';
+include '../inc/sellinginvoiceidgenerator.php';
 
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
 
 $output = '';
-$query = "SELECT * FROM item ORDER BY iName ASC";
+$query = "SELECT * FROM items ORDER BY itemName ASC";
 $result = mysqli_query($con, $query);
 while ($row = mysqli_fetch_assoc($result)) {
-    $output .= '<option value="' . $row["itemID"] . '">' . $row["iName"] . '</option>';
+    $output .= '<option value="' . $row["I_ID"] . '">' . $row["itemName"] . '</option>';
+}
+
+$fresult = '';
+$query = "SELECT * FROM orderm ORDER BY Order_ID ASC";
+$rest = mysqli_query($con, $query);
+while ($row = mysqli_fetch_assoc($rest)) {
+    $fresult .= '<option value="' . $row["OrderM_ID"] . '">' . $row["Order_ID"] . '</option>';
 }
 
 $outp = '';
-$query = "SELECT * FROM vendor ORDER BY vName ASC";
+$query = "SELECT * FROM customer ORDER BY cName ASC";
 $result = mysqli_query($con, $query);
 while ($row = mysqli_fetch_assoc($result)) {
-    $outp .= '<option value="' . $row["vendorID"] . '">' . $row["vName"] . '</option>';
+    $outp .= '<option value="' . $row["customerID"] . '">' . $row["cName"] . '</option>';
 }
 
+if (isset($_POST['create_invoice'])) {
+    $customerid = mysqli_real_escape_string($con, $_POST['CustomerName']);
+    $invoiceid = mysqli_real_escape_string($con, $_POST['invoiceno']);
+    $orderid = mysqli_real_escape_string($con, $_POST['orderid']);
+    $invoicedate = mysqli_real_escape_string($con, $_POST['invoice_date']);
+    $finalAmount = mysqli_real_escape_string($con, $_POST['finalTotalAmount']);
 
-$out = "";
-$out .= '<option value="YES">YES</option>
-          <option value="NO">NO</option>
-          ';
+    $sql = "INSERT INTO sellinginvoicelist(SInvoiveID,orderID,SellingInvDate,CusID,finalAmt) VALUES ('$invoiceid','$orderid','$invoicedate','$customerid','$finalAmount')";
+    mysqli_query($con, $sql);
+    $invlistTableid = mysqli_insert_id($con);
+
+    for ($a = 0; $a < count($_POST["itemName"]); $a++) {
+        $sql = "INSERT INTO sellinginvoiceitem(sinlistTableid,SInvoiceID,itemName,itemQuan5kg,itemPrice5kg,actualAmount5kg,itemQuan10kg,itemPrice10kg,actualAmount10kg,itemQuan25kg,itemPrice25kg,actualAmount25kg,discount,subTotal) VALUES('$invlistTableid','$invoiceid','" . $_POST["itemName"][$a] . "','" . $_POST["itemQuantity5kg"][$a] . "','" . $_POST["itemPrice5kg"][$a] . "','" . $_POST["itemActualAmount5kg"][$a] . "','" . $_POST["itemQuantity10kg"][$a] . "','" . $_POST["itemPrice10kg"][$a] . "','" . $_POST["itemActualAmount10kg"][$a] . "','" . $_POST["itemQuantity25kg"][$a] . "','" . $_POST["itemPrice25kg"][$a] . "','" . $_POST["itemActualAmount25kg"][$a] . "','" . $_POST["itemDiscount"][$a] . "','" . $_POST["itemTotal"][$a] . "')";
+        mysqli_query($con, $sql);
+    }
+
+    header("Location: SellingInvoiceList.php?error=Success");
+    exit();
+}
 
 ?>
 <!DOCTYPE html>
@@ -30,7 +57,7 @@ $out .= '<option value="YES">YES</option>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Buying Invoice</title>
+    <title>Selling Invoice</title>
     <!--Custom CSS-->
     <link rel="stylesheet" href="../dist/css/customCSS.css">
     <!-- overlayScrollbars -->
@@ -73,7 +100,7 @@ $out .= '<option value="YES">YES</option>
                         <span class="badge badge-warning navbar-badge"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="Includes/Logout.inc.php" class="dropdown-item">
+                        <a href="../inc/Logout.inc.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
                         </a>
                     </div>
@@ -86,7 +113,7 @@ $out .= '<option value="YES">YES</option>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
                 <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
             </a>
 
@@ -98,7 +125,7 @@ $out .= '<option value="YES">YES</option>
                         <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
                     </div>
                 </div>
 
@@ -115,7 +142,7 @@ $out .= '<option value="YES">YES</option>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="../Order/OrderTable.php" class="nav-link">
                                 <i class="nav-icon fas fa-shopping-basket"></i>
                                 <p>Order Management</p>
                             </a>
@@ -135,11 +162,27 @@ $out .= '<option value="YES">YES</option>
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item has-treeview menu-open">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Billing</p>
+                                <i class="right fas fa-angle-left"></i>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="../Billing/BuyingInvoiceList.php" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>Buying Invoice</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="../Billing/SellingInvoiceList.php" class="nav-link active">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>Selling Invoice</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
 
@@ -150,11 +193,27 @@ $out .= '<option value="YES">YES</option>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-truck-loading"></i>
                                 <p>Transport Handling</p>
+                                <i class="right fas fa-angle-left"></i>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="../Transport/TransportActionTable.php" class="nav-link">
+                                        <i class="nav-icon fas fa-dollar-sign"></i>
+                                        <p>Transport Action</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="../Transport/TransportHandlingTable.php" class="nav-link">
+                                        <i class="nav-icon fas fa-dollar-sign"></i>
+                                        <p>Transport Handling</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li class="nav-item">
@@ -306,7 +365,7 @@ $out .= '<option value="YES">YES</option>
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header" id="cus">
-                                    <h5 class="card-title">Paddy Buying Invoice</h5>
+                                    <h5 class="card-title">Rice Selling Invoice</h5>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" data-placement="top" title="Minimize">
                                             <i class="fas fa-minus"></i>
@@ -356,7 +415,61 @@ $out .= '<option value="YES">YES</option>
                                         <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
                                     <?php endif;  ?>
 
-                                    <form action="../inc/addcustomer.php" method="POST" name="cart">
+                                    <div class="form-row mb-5">
+                                        <div class="col-md-6">
+                                            <div class="card shadow-md">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Price Table</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                                            <table id="example2" class="table table-bordered table-hover">
+                                                                <thead class="thead-dark">
+                                                                    <tr>
+                                                                        <th>Item Name</th>
+                                                                        <th style="width: 20%">Unit Price (5KG)</th>
+                                                                        <th style="width: 20%">Unit Price (10KG)</th>
+                                                                        <th style="width: 20%">Unit Price (25KG)</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $sql = "SELECT i.itemName,r.price5kg,r.price10kg,r.price25kg FROM items i, riceprice r WHERE r.item_ID = i.I_ID";
+                                                                    $resultset = mysqli_query($con, $sql);
+                                                                    if ($result) {
+                                                                        while ($row = mysqli_fetch_assoc($resultset)) {
+                                                                            $itemName = $row['itemName'];
+                                                                            $price5 = $row['price5kg'];
+                                                                            $price10 = $row['price10kg'];
+                                                                            $price25 = $row['price25kg'];
+
+                                                                    ?>
+
+                                                                            <tr>
+                                                                                <td><?php echo $itemName ?></td>
+                                                                                <td><?php echo $price5 ?></td>
+                                                                                <td><?php echo $price10 ?></td>
+                                                                                <td><?php echo $price25 ?></td>
+                                                                            </tr>
+
+                                                                    <?php
+
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form action="sellRice.php" method="POST" id="invoice_form">
+
                                         <div class="table-responsive">
                                             <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                                                 <table class="table table-bordered">
@@ -374,17 +487,22 @@ $out .= '<option value="YES">YES</option>
                                                                     <div class="col-md-5">
                                                                         To, <br>
                                                                         <b>RECEIVER (BILL TO)</b>
-                                                                        <select class="form-control mb-2" name="VendorName" id="VendorName">
+                                                                        <select class="form-control mb-2" name="CustomerName" id="CustomerName">
                                                                             <option selected disabled>--Select--</option>
                                                                             <?php echo $outp; ?>
                                                                         </select>
-                                                                        <div id="Vendoraddress"> <input type="text" class="form-control" name="Vendoraddress" readonly> </div>
+                                                                        <div id="Customeraddress"> <input type="text" class="form-control" name="Customeraddress" readonly> </div>
                                                                     </div>
                                                                     <div class="col-md-3"></div>
-                                                                    <div class="col-md-4">
-                                                                        Reverse Charge<br>
-                                                                        <input type="text" name="order_no" id="order_no" class="form-control input-sm mb-3" placeholder="Enter Invoice Number" readonly>
-                                                                        <input type="text" name="order_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
+                                                                    <div class="col-md-4"><br>
+                                                                        <label>Order ID</label>
+                                                                        <select class="form-control mb-2" name="orderid" id="orderid">
+                                                                            <option selected disabled>--Select--</option>
+                                                                            <?php echo $fresult; ?>
+                                                                        </select>
+                                                                        <label>Invoice ID</label>
+                                                                        <input type="text" name="invoiceno" id="invoiceno" class="form-control input-sm mb-2" placeholder="Enter Invoice Number" value="<?php echo $sinvoiceid ?>" readonly>
+                                                                        <input type="text" name="invoice_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="table-responsive">
@@ -392,14 +510,18 @@ $out .= '<option value="YES">YES</option>
                                                                         <table id="buypaddyTable" class="table table-bordered table-hover table-responsive-sm" overflow="auto" name="cart">
                                                                             <thead>
                                                                                 <tr>
-
                                                                                     <th style="width: 15%">Item Name</th>
-                                                                                    <th>Quantity</th>
-                                                                                    <th>Price</th>
-                                                                                    <th>Actual Amount</th>
-                                                                                    <th>Discount</th>
-                                                                                    <th style="width: 13%">Humidity</th>
-                                                                                    <th>Total</th>
+                                                                                    <th>5KG <br>Quantity</th>
+                                                                                    <th style="width: 10%">Price</th>
+                                                                                    <th style="width: 10%">5KG Amount</th>
+                                                                                    <th>10KG <br>Quantity</th>
+                                                                                    <th style="width: 10%">Price</th>
+                                                                                    <th style="width: 10%">10KG Amount</th>
+                                                                                    <th>25KG <br>Quantity</th>
+                                                                                    <th style="width: 10%">Price</th>
+                                                                                    <th style="width: 10%">25KG Amount</th>
+                                                                                    <th style="width: 10%">Discount</th>
+                                                                                    <th style="width: 10%">Total</th>
                                                                                     <th>
                                                                                         <div align="center">
                                                                                             <button type="button" id="addrow" name="addrow" class="addrow btn btn-success btn-sm add"><span class="glyphicon glyphicon-plus"></span>+</button>
@@ -408,35 +530,47 @@ $out .= '<option value="YES">YES</option>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                                <tr id="test" name="line_items">
-
-                                                                                    <td><select class="form-control " name="itemName">
+                                                                                <tr>
+                                                                                    <td><select class="form-control " name="itemName[]" id="itemName1">
                                                                                             <option selected disabled>--Select--</option>
                                                                                             <?php echo $output; ?>
                                                                                         </select>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <input type="text" class="form-control" name="itemQuantity" id="itemQuantity">
+                                                                                        <input type="text" class="form-control" name="itemQuantity5kg[]" id="itemQuantity5kg1" data-srno="1">
                                                                                     </td>
                                                                                     <td>
-                                                                                        <input type="text" class="form-control" name="itemPrice" id="itemPrice">
+                                                                                        <input type="text" class="item_Price5kg form-control" name="itemPrice5kg[]" id="itemPrice5kg1" data-srno="1">
                                                                                     </td>
                                                                                     <td>
-                                                                                        <input type="text" class="form-control" name="itemActualAmount" id="itemActualAmount" value="" jAutoCalc="{itemQuantity} * {itemPrice}" readonly>
+                                                                                        <input type="text" class="form-control" name="itemActualAmount5kg[]" id="itemActualAmount5kg1" data-srno="1" readonly>
                                                                                     </td>
                                                                                     <td>
-                                                                                        <input type="text" class="form-control" name="itemDiscount" id="itemDiscount">
-                                                                                    </td>
-                                                                                    <td><select class="form-control" name="humidity" id="humidity">
-                                                                                            <option selected disabled>--Select--</option>
-                                                                                            <?php echo $out; ?>
-                                                                                        </select></td>
-                                                                                    <td>
-                                                                                        <input type="text" class="form-control" name="itemTotal" id="itemTotal" value="" jAutoCalc="{itemActualAmount} - {itemDiscount}" readonly>
+                                                                                        <input type="text" class="form-control" name="itemQuantity10kg[]" id="itemQuantity10kg1" data-srno="1">
                                                                                     </td>
                                                                                     <td>
-                                                                                        <button type="button" name="remove_row" id="remove_row" class="remove_row btn btn-danger btn-sm ">X</button>
+                                                                                        <input type="text" class="item_Price10kg form-control" name="itemPrice10kg[]" id="itemPrice10kg1" data-srno="1">
                                                                                     </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" name="itemActualAmount10kg[]" id="itemActualAmount10kg1" data-srno="1" readonly>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" name="itemQuantity25kg[]" id="itemQuantity25kg1" data-srno="1">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="item_Price25kg form-control" name="itemPrice25kg[]" id="itemPrice25kg1" data-srno="1">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" name="itemActualAmount25kg[]" id="itemActualAmount25kg1" data-srno="1" readonly>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="item_Discount form-control" name="itemDiscount[]" id="itemDiscount1" data-srno="1">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" name="itemTotal[]" id="itemTotal1" data-srno="1" readonly>
+                                                                                    </td>
+
+                                                                                    <td></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -452,12 +586,14 @@ $out .= '<option value="YES">YES</option>
                                                         </tr>
                                                         <tr>
                                                             <td align="center">
+                                                                <input type="hidden" name="total_item" id="total_item" value="1">
                                                                 <input type="submit" name="create_invoice" id="create_invoice" class="btn btn-info" value="Create">
                                                             </td>
                                                         </tr>
                                                     </tbody>
 
                                                 </table>
+                                                <a href="SellingInvoiceList.php"><button type="button" class="btn btn-warning float-right" value="Back" style="margin-right: 5px;"><i class=" fas fa-arrow-left"></i> Back To Table</button></a>
                                             </div>
 
                                         </div>
@@ -515,59 +651,187 @@ $out .= '<option value="YES">YES</option>
 
     <script>
         $(document).ready(function() {
-            $("#VendorName").change(function() {
-                var vid = $(this).val();
+            $("#CustomerName").change(function() {
+                var cid = $(this).val();
                 $.ajax({
-                    url: "../inc/bpvendoraddress.php",
+                    url: "../inc/SellingInvoiceCustomerAddress.php",
                     method: "POST",
                     data: {
-                        VendorID: vid
+                        CustomerID: cid
                     },
                     dataType: "text",
                     success: function(data) {
-                        $("#Vendoraddress").html(data);
+                        $("#Customeraddress").html(data);
                     }
                 })
             });
         });
     </script>
     <script>
+        $(document).ready(function() {
+            var final_total_amt = $('#finalTotalAmount').text();
+            var count = 1;
+            $('#addrow').on('click', function() {
+                count = count + 1;
+                $('#total_item').val(count);
+                var markup = `<tr id="row_id_` + count + `" name="line_items">`;
+                markup += `<td><select class ='form-control' name ='itemName[]' id='itemName` + count + `'><option selected disabled > --Select-- </option> <?php echo $output; ?> </select> </td>`;
+                markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity5kg[]' id='itemQuantity5kg" + count + "' data-srno='" + count + "'></td>";
+                markup += "<td><input type='text' class='item_Price5kg form-control' name='itemPrice5kg[]' id='itemPrice5kg" + count + "' data-srno='" + count + "'></td>";
+                markup += `<td><input type = "text" class ="form-control" name="itemActualAmount5kg[]" id="itemActualAmount5kg` + count + `" data-srno="` + count + `" readonly></td>`;
+                markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity10kg[]' id='itemQuantity10kg" + count + "' data-srno='" + count + "'></td>";
+                markup += "<td><input type='text' class='item_Price10kg form-control' name='itemPrice10kg[]' id='itemPrice10kg" + count + "' data-srno='" + count + "'></td>";
+                markup += `<td><input type = "text" class ="form-control" name="itemActualAmount10kg[]" id="itemActualAmount10kg` + count + `" data-srno="` + count + `" readonly></td>`;
+                markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity25kg[]' id='itemQuantity25kg" + count + "' data-srno='" + count + "'></td>";
+                markup += "<td><input type='text' class='item_Price25kg form-control' name='itemPrice25kg[]' id='itemPrice25kg" + count + "' data-srno='" + count + "'></td>";
+                markup += `<td><input type = "text" class ="form-control" name="itemActualAmount25kg[]" id="itemActualAmount25kg` + count + `" data-srno="` + count + `" readonly></td>`;
+                markup += "<td><input type ='text' class ='item_Discount form-control' name ='itemDiscount[]' id ='itemDiscount" + count + "' data-srno='" + count + "' ></td>";
+                markup += "<td><input type ='text' class ='form-control' name ='itemTotal[]' id ='itemTotal" + count + "' data-srno='" + count + "' readonly ></td>";
+                markup += "<td><button type ='button' name='remove_row' id='" + count + "' data-row='" + count + "' class ='remove_row  btn btn-danger btn-sm' > X </button> </td>";
+                markup += "</tr>";
 
+                $("#buypaddyTable tbody").append(markup);
+
+            });
+            $(document).on('click', '.remove_row', function() {
+                var row_id = $(this).attr("id");
+                var total_item_amount = $('#itemTotal' + row_id).val();
+                var final_amount = $('#finalTotalAmount').value;
+                var result_amount = parseFloat(final_amount) - parseFloat(total_item_amount);
+                $('#finalTotalAmount').val(result_amount);
+                $('#row_id_' + row_id).remove();
+                // var delete_row = $(this).data('row');
+                // $("#" + delete_row).remove();
+                count = count - 1;
+                $('#total_item').val(count);
+            });
+
+
+            function calc_final_total(count) {
+                var final_item_total = 0;
+                for (j = 1; j <= count; j++) {
+                    var quantity5kg = 0;
+                    var quantity10kg = 0;
+                    var quantity25kg = 0;
+                    var price5kg = 0;
+                    var price10kg = 0;
+                    var price25kg = 0;
+                    var actual_amount5kg = 0;
+                    var actual_amount10kg = 0;
+                    var actual_amount25kg = 0;
+                    var total_actual_amount = 0;
+                    var discount = 0;
+                    var item_total = 0;
+
+
+
+                    quantity5kg = $('#itemQuantity5kg' + j).val();
+                    if (quantity5kg > 0) {
+                        price5kg = $('#itemPrice5kg' + j).val();
+                        if (price5kg > 0) {
+                            actual_amount5kg = parseFloat(quantity5kg) * parseFloat(price5kg);
+                            $('#itemActualAmount5kg' + j).val(actual_amount5kg);
+                        }
+                    }
+                    quantity10kg = $('#itemQuantity10kg' + j).val();
+                    if (quantity10kg > 0) {
+                        price10kg = $('#itemPrice10kg' + j).val();
+                        if (price10kg > 0) {
+                            actual_amount10kg = parseFloat(quantity10kg) * parseFloat(price10kg);
+                            $('#itemActualAmount10kg' + j).val(actual_amount10kg);
+                        }
+                    }
+                    quantity25kg = $('#itemQuantity25kg' + j).val();
+                    if (quantity25kg > 0) {
+                        price25kg = $('#itemPrice25kg' + j).val();
+                        if (price25kg > 0) {
+                            actual_amount25kg = parseFloat(quantity25kg) * parseFloat(price25kg);
+                            $('#itemActualAmount25kg' + j).val(actual_amount25kg);
+                        }
+                    }
+                    total_actual_amount = parseFloat(actual_amount5kg) + parseFloat(actual_amount10kg) + parseFloat(actual_amount25kg);
+                    discount = $('#itemDiscount' + j).val();
+                    if (discount > 0) {
+                        item_total = parseFloat(total_actual_amount) - parseFloat(discount);
+                        final_item_total = parseFloat(final_item_total) + parseFloat(item_total);
+                        $('#itemTotal' + j).val(item_total);
+                    } else {
+                        item_total = parseFloat(total_actual_amount);
+                        final_item_total = parseFloat(final_item_total) + parseFloat(item_total);
+                        $('#itemTotal' + j).val(item_total);
+                    }
+                }
+
+                $('#finalTotalAmount').val(final_item_total);
+            }
+
+
+            $(document).on('blur', '.item_Price5kg', function() {
+                calc_final_total(count);
+            });
+
+            $(document).on('blur', '.item_Price10kg', function() {
+                calc_final_total(count);
+            });
+
+            $(document).on('blur', '.item_Price25kg', function() {
+                calc_final_total(count);
+            });
+
+            $(document).on('blur', '.item_Discount', function() {
+                calc_final_total(count);
+            });
+            $(document).on('blur', '#finalTotalAmount', function() {
+                calc_final_total(count);
+            });
+
+            $('#create_invoice').click(function() {
+                if ($.trim($('#CustomerName').val()).length == 0) {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        confirmButtonColor: 'green',
+                        text: 'Customer Name is Empty!',
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                    })
+                    return false;
+                }
+
+                if ($.trim($('#orderid').val()).length == 0) {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        confirmButtonColor: 'green',
+                        text: 'Order ID is Empty!',
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                    })
+                    return false;
+                }
+
+                for (var no = 1; no <= count; no++) {
+                    if ($.trim($('#itemName' + no).val()).length == 0) {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            confirmButtonColor: 'green',
+                            text: 'Item Name is Empty!',
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                        })
+                        $('#itemName' + no).focus();
+                        return false;
+                    }
+                }
+
+            });
+
+        });
     </script>
 
     <script>
         $.validate();
-    </script>
-
-    <script>
-        function autoCalcSetup() {
-            $('form[name=cart]').jAutoCalc('destroy');
-            $('form[name=cart] tr[name=line_items').jAutoCalc({
-                KeyEventsFire: true,
-                decimalPlaces: 2,
-                emptyAsZero: true
-            });
-            $('form[name=cart]').jAutoCalc({
-                decimalPlaces: 2
-            });
-        }
-        autoCalcSetup();
-        $('button[name=remove_row]').click(function(e) {
-            e.preventDefault();
-            var form = $(this).parents(form);
-            $(this).parents('tr').remove();
-            autoCalcSetup();
-        });
-        $('button[name=addrow]').click(function(e) {
-            e.preventDefault();
-            var $table = $(this).parents('table');
-            var $top = $table.find('tr[name=line_items]').first();
-            var $new = $top.clone(true);
-            $new.jAutoCalc('destroy');
-            $new.insertAfter($top);
-            $new.find('input[type=text]').val('');
-            autoCalcSetup();
-        });
     </script>
 
     <script>

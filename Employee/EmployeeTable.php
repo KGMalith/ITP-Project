@@ -78,7 +78,7 @@ $employees = mysqli_query($con, $query);
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
                 <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
             </a>
 
@@ -127,11 +127,27 @@ $employees = mysqli_query($con, $query);
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Billing</p>
+                                <i class="right fas fa-angle-left"></i>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="../Billing/BuyingInvoiceList.php" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>Buying Invoice</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="../Billing/SellingInvoiceList.php" class="nav-link">
+                                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                        <p>Selling Invoice</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
 

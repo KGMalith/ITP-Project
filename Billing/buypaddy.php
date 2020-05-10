@@ -1,13 +1,20 @@
 <?php
 include '../inc/dbconnect.php';
+include '../inc/buyinginvoiceidgenerator.php';
 
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+  header("Location: ../Login.php");
+}
 
 $output = '';
-$query = "SELECT * FROM item ORDER BY iName ASC";
+$query = "SELECT * FROM items ORDER BY itemName ASC";
 $result = mysqli_query($con, $query);
 while ($row = mysqli_fetch_assoc($result)) {
-  $output .= '<option value="' . $row["itemID"] . '">' . $row["iName"] . '</option>';
+  $output .= '<option value="' . $row["I_ID"] . '">' . $row["itemName"] . '</option>';
 }
+
 
 $outp = '';
 $query = "SELECT * FROM vendor ORDER BY vName ASC";
@@ -21,6 +28,28 @@ $out = "";
 $out .= '<option value="YES">YES</option>
           <option value="NO">NO</option>
           ';
+
+
+
+if (isset($_POST['create_invoice'])) {
+  $vendorid = mysqli_real_escape_string($con, $_POST['VendorName']);
+  $invoiceid = mysqli_real_escape_string($con, $_POST['invoiceno']);
+  $invoicedate = mysqli_real_escape_string($con, $_POST['invoice_date']);
+  $finalAmount = mysqli_real_escape_string($con, $_POST['finalTotalAmount']);
+
+  $sql = "INSERT INTO buyinginvoicelist(BInvoiceID,orderDate,vendorid,finalAmount) VALUES ('$invoiceid','$invoicedate','$vendorid','$finalAmount')";
+  mysqli_query($con, $sql);
+  $invlistTableid = mysqli_insert_id($con);
+
+  for ($a = 0; $a < count($_POST["itemName"]); $a++) {
+    $sql = "INSERT INTO buyinginvoiceitem(inlistTableId,BInvoiceID,itemName,itemQuantity,itemPrice,actualAmount,discount,humidity,total) VALUES('$invlistTableid','$invoiceid','" . $_POST["itemName"][$a] . "','" . $_POST["itemQuantity"][$a] . "','" . $_POST["itemPrice"][$a] . "','" . $_POST["itemActualAmount"][$a] . "','" . $_POST["itemDiscount"][$a] . "','" . $_POST["humidity"][$a] . "','" . $_POST["itemTotal"][$a] . "')";
+    mysqli_query($con, $sql);
+  }
+
+  header("Location: BuyingInvoiceList.php?error=Success");
+  exit();
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -73,7 +102,7 @@ $out .= '<option value="YES">YES</option>
             <span class="badge badge-warning navbar-badge"></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a href="Includes/Logout.inc.php" class="dropdown-item">
+            <a href="../inc/Logout.inc.php" class="dropdown-item">
               <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;LogOut
             </a>
           </div>
@@ -86,7 +115,7 @@ $out .= '<option value="YES">YES</option>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="index3.html" class="brand-link">
-        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
 
@@ -98,7 +127,7 @@ $out .= '<option value="YES">YES</option>
             <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
+            <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
           </div>
         </div>
 
@@ -115,7 +144,7 @@ $out .= '<option value="YES">YES</option>
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="../Order/OrderTable.php" class="nav-link">
                 <i class="nav-icon fas fa-shopping-basket"></i>
                 <p>Order Management</p>
               </a>
@@ -135,11 +164,27 @@ $out .= '<option value="YES">YES</option>
               </a>
             </li>
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+            <li class="nav-item has-treeview menu-open">
+              <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-file-invoice"></i>
                 <p>Billing</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Billing/BuyingInvoiceList.php" class="nav-link active">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Buying Invoice</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Billing/SellingInvoiceList.php" class="nav-link">
+                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    <p>Selling Invoice</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
 
@@ -150,11 +195,27 @@ $out .= '<option value="YES">YES</option>
               </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-truck-loading"></i>
                 <p>Transport Handling</p>
+                <i class="right fas fa-angle-left"></i>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../Transport/TransportActionTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Transport Action</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="../Transport/TransportHandlingTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <p>Transport Handling</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item">
@@ -356,7 +417,7 @@ $out .= '<option value="YES">YES</option>
                     <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
                   <?php endif;  ?>
 
-                  <form action="../inc/addcustomer.php" method="POST" name="cart">
+                  <form action="buypaddy.php" method="POST" id="invoice_form">
                     <div class="table-responsive">
                       <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                         <table class="table table-bordered">
@@ -381,10 +442,10 @@ $out .= '<option value="YES">YES</option>
                                     <div id="Vendoraddress"> <input type="text" class="form-control" name="Vendoraddress" readonly> </div>
                                   </div>
                                   <div class="col-md-3"></div>
-                                  <div class="col-md-4">
-                                    Reverse Charge<br>
-                                    <input type="text" name="order_no" id="order_no" class="form-control input-sm mb-3" placeholder="Enter Invoice Number" readonly>
-                                    <input type="text" name="order_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
+                                  <div class="col-md-4"><br>
+                                    <label>Invoice ID</label>
+                                    <input type="text" name="invoiceno" id="invoiceno" class="form-control input-sm mb-2" placeholder="Enter Invoice Number" value="<?php echo $binvoiceid ?>" readonly>
+                                    <input type="text" name="invoice_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
                                   </div>
                                 </div>
                                 <div class="table-responsive">
@@ -392,7 +453,6 @@ $out .= '<option value="YES">YES</option>
                                     <table id="buypaddyTable" class="table table-bordered table-hover table-responsive-sm" overflow="auto" name="cart">
                                       <thead>
                                         <tr name="line_items">
-
                                           <th style="width: 15%">Item Name</th>
                                           <th>Quantity</th>
                                           <th>Price</th>
@@ -408,35 +468,32 @@ $out .= '<option value="YES">YES</option>
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        <tr id="test" name="line_items">
-
-                                          <td><select class="form-control " name="itemName">
+                                        <tr>
+                                          <td><select class="form-control " name="itemName[]" id="itemName1">
                                               <option selected disabled>--Select--</option>
                                               <?php echo $output; ?>
                                             </select>
                                           </td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemQuantity" id="itemQuantity">
+                                            <input type="text" class="form-control" name="itemQuantity[]" id="itemQuantity1" data-srno="1">
                                           </td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemPrice" id="itemPrice">
+                                            <input type="text" class="item_Price form-control" name="itemPrice[]" id="itemPrice1" data-srno="1">
                                           </td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemActualAmount" id="itemActualAmount" value="" jAutoCalc="{itemQuantity} * {itemPrice}" readonly>
+                                            <input type="text" class="form-control" name="itemActualAmount[]" id="itemActualAmount1" data-srno="1" readonly>
                                           </td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemDiscount" id="itemDiscount">
+                                            <input type="text" class="item_Discount form-control" name="itemDiscount[]" id="itemDiscount1" data-srno="1">
                                           </td>
-                                          <td><select class="form-control" name="humidity" id="humidity">
+                                          <td><select class="form-control" name="humidity[]" id="humidity1">
                                               <option selected disabled>--Select--</option>
                                               <?php echo $out; ?>
                                             </select></td>
                                           <td>
-                                            <input type="text" class="form-control" name="itemTotal" id="itemTotal" value="" jAutoCalc="{itemActualAmount} - {itemDiscount}" readonly>
+                                            <input type="text" class="form-control" name="itemTotal[]" id="itemTotal1" data-srno="1" readonly>
                                           </td>
-                                          <td>
-                                            <button type="button" name="remove_row" id="remove_row" class="remove_row btn btn-danger btn-sm ">X</button>
-                                          </td>
+                                          <td></td>
                                         </tr>
                                       </tbody>
                                     </table>
@@ -452,12 +509,14 @@ $out .= '<option value="YES">YES</option>
                             </tr>
                             <tr>
                               <td align="center">
+                                <input type="hidden" name="total_item" id="total_item" value="1">
                                 <input type="submit" name="create_invoice" id="create_invoice" class="btn btn-info" value="Create">
                               </td>
                             </tr>
                           </tbody>
 
                         </table>
+                        <a href="BuyingInvoiceList.php"><button type="button" class="btn btn-warning float-right" value="Back" style="margin-right: 5px;"><i class=" fas fa-arrow-left"></i> Back To Table</button></a>
                       </div>
 
                     </div>
@@ -518,7 +577,7 @@ $out .= '<option value="YES">YES</option>
       $("#VendorName").change(function() {
         var vid = $(this).val();
         $.ajax({
-          url: "../inc/bpvendoraddress.php",
+          url: "../inc/BuyingInvoiceVendorAddress.php",
           method: "POST",
           data: {
             VendorID: vid
@@ -533,30 +592,150 @@ $out .= '<option value="YES">YES</option>
   </script>
   <script>
     $(document).ready(function() {
+      var final_total_amt = $('#finalTotalAmount').text();
       var count = 1;
       $('#addrow').on('click', function() {
         count = count + 1;
-
-        var markup = `<tr id="` + count + `" name="line_items">`;
-        markup += `<td><select class ='form-control' name = 'itemName'><option selected disabled > --Select-- </option> <?php echo $output; ?> </select> </td>`;
-        markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity' id='itemQuantity" + count + "' data-qty='" + count + "'></td>";
-        markup += "<td><input type='text' class='form-control' name='itemPrice' id='itemPrice" + count + "' ></td>";
-        markup += `<td><input type = "text" class ="form-control" name="itemActualAmount" id="itemActualAmount" value="" jAutoCalc="{itemQuantity}*{itemPrice}" readonly></td>`;
-        markup += "<td><input type = 'text' class = 'form-control' name = 'itemDiscount' id = 'itemDiscount' ></td>";
-        markup += `<td><select class = 'form-control' name = 'humidity' id = 'humidity'><option selected disabled > --Select-- </option> <?php echo $out; ?> </select></td>`;
-        markup += "<td><input type ='text' class ='form-control' name ='itemTotal' id ='itemTotal' value='' jAutoCalc='{itemQuantity}*{itemPrice}' readonly ></td>";
-        markup += "<td><button type ='button' name='remove_row' id='remove_row' data-row='" + count + "' class ='remove_row btn btn-danger btn-sm' > X </button> </td>";
+        $('#total_item').val(count);
+        var markup = `<tr id="row_id_` + count + `" name="line_items">`;
+        markup += `<td><select class ='form-control' name ='itemName[]' id='itemName` + count + `'><option selected disabled > --Select-- </option> <?php echo $output; ?> </select> </td>`;
+        markup += "<td><input type = 'text' class = 'form-control' name = 'itemQuantity[]' id='itemQuantity" + count + "' data-srno='" + count + "'></td>";
+        markup += "<td><input type='text' class='item_Price form-control' name='itemPrice[]' id='itemPrice" + count + "' data-srno='" + count + "'></td>";
+        markup += `<td><input type = "text" class ="form-control" name="itemActualAmount[]" id="itemActualAmount` + count + `" data-srno="` + count + `" readonly></td>`;
+        markup += "<td><input type ='text' class ='item_Discount form-control' name ='itemDiscount[]' id ='itemDiscount" + count + "' data-srno='" + count + "' ></td>";
+        markup += `<td><select class ='form-control' name ='humidity[]' id ='humidity` + count + `'><option selected disabled > --Select-- </option> <?php echo $out; ?> </select></td>`;
+        markup += "<td><input type ='text' class ='form-control' name ='itemTotal[]' id ='itemTotal" + count + "' data-srno='" + count + "' readonly ></td>";
+        markup += "<td><button type ='button' name='remove_row' id='" + count + "' data-row='" + count + "' class ='remove_row  btn btn-danger btn-sm' > X </button> </td>";
         markup += "</tr>";
 
         $("#buypaddyTable tbody").append(markup);
 
       });
-      $(document).on('click', '#remove_row', function() {
-        var delete_row = $(this).data('row');
-        $("#" + delete_row).remove();
+      $(document).on('click', '.remove_row', function() {
+        var row_id = $(this).attr("id");
+        var total_item_amount = $('#itemTotal' + row_id).val();
+        var final_amount = $('#finalTotalAmount').value;
+        var result_amount = parseFloat(final_amount) - parseFloat(total_item_amount);
+        $('#finalTotalAmount').val(result_amount);
+        $('#row_id_' + row_id).remove();
+        // var delete_row = $(this).data('row');
+        // $("#" + delete_row).remove();
+        count = count - 1;
+        $('#total_item').val(count);
       });
 
-      
+      function calc_final_total(count) {
+        var final_item_total = 0;
+        for (j = 1; j <= count; j++) {
+          var quantity = 0;
+          var price = 0;
+          var actual_amount = 0;
+          var discount = 0;
+          var item_total = 0;
+
+          quantity = $('#itemQuantity' + j).val();
+          if (quantity > 0) {
+            price = $('#itemPrice' + j).val();
+            if (price > 0) {
+              actual_amount = parseFloat(quantity) * parseFloat(price);
+              $('#itemActualAmount' + j).val(actual_amount);
+              console.log(actual_amount);
+              discount = $('#itemDiscount' + j).val();
+              if (discount > 0) {
+                item_total = parseFloat(actual_amount) - parseFloat(discount);
+                final_item_total = parseFloat(final_item_total) + parseFloat(item_total);
+                $('#itemTotal' + j).val(item_total);
+              } else {
+                item_total = parseFloat(actual_amount);
+                final_item_total = parseFloat(final_item_total) + parseFloat(item_total);
+                $('#itemTotal' + j).val(item_total);
+              }
+
+            }
+          }
+        }
+        $('#finalTotalAmount').val(final_item_total);
+      }
+
+
+      $(document).on('blur', '.item_Price', function() {
+        calc_final_total(count);
+      });
+
+      $(document).on('blur', '.item_Discount', function() {
+        calc_final_total(count);
+      });
+
+      $(document).on('blur', '#finalTotalAmount', function() {
+        calc_final_total(count);
+      });
+
+      $('#create_invoice').click(function() {
+        if ($.trim($('#VendorName').val()).length == 0) {
+          swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            confirmButtonColor: 'green',
+            text: 'Vendor Name is Empty!',
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+          })
+          return false;
+        }
+
+        for (var no = 1; no <= count; no++) {
+          if ($.trim($('#itemName' + no).val()).length == 0) {
+            swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              confirmButtonColor: 'green',
+              text: 'Item Name is Empty!',
+              closeOnEsc: false,
+              closeOnClickOutside: false,
+            })
+            $('#itemName' + no).focus();
+            return false;
+          }
+          if ($.trim($('#itemQuantity' + no).val()).length == 0) {
+            swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              confirmButtonColor: 'green',
+              text: 'Item Quantity is Empty!',
+              closeOnEsc: false,
+              closeOnClickOutside: false,
+            })
+            $('#itemQuantity' + no).focus();
+            return false;
+          }
+          if ($.trim($('#itemPrice' + no).val()).length == 0) {
+            swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              confirmButtonColor: 'green',
+              text: 'Item Price is Empty!',
+              closeOnEsc: false,
+              closeOnClickOutside: false,
+            })
+            $('#itemPrice' + no).focus();
+            return false;
+          }
+
+          if ($.trim($('#humidity' + no).val()).length == 0) {
+            swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              confirmButtonColor: 'green',
+              text: 'Humidity Not Chosen!',
+              closeOnEsc: false,
+              closeOnClickOutside: false,
+            })
+            $('#itemPrice' + no).focus();
+            return false;
+          }
+        }
+
+      });
 
     });
   </script>
@@ -564,24 +743,6 @@ $out .= '<option value="YES">YES</option>
   <script>
     $.validate();
   </script>
-
-  <script>
-    $(document).ready(function() {
-      $('form[name=cart] tr[name=line_items]').jAutoCalc({
-        keyEventsFire: true,
-        decimalPlaces: 2
-      });
-      $('form[name=cart]').jAutoCalc({
-        decimalPlaces: 2
-      });
-
-    });
-  </script>
-
-  <script>
-
-  </script>
-
 
   <script>
     //SweetAlert
