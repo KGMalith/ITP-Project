@@ -195,14 +195,14 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="../Transport/TransportActionTable.php" class="nav-link">
-                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <i class="nav-icon fas fa-truck"></i>
                     <p>Transport Action</p>
                   </a>
                 </li>
 
                 <li class="nav-item">
                   <a href="../Transport/TransportHandlingTable.php" class="nav-link">
-                    <i class="nav-icon fas fa-dollar-sign"></i>
+                    <i class="nav-icon fas fa-truck"></i>
                     <p>Transport Handling</p>
                   </a>
                 </li>

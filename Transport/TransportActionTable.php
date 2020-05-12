@@ -197,21 +197,21 @@ $Expenses = mysqli_query($con, $query);
                         <li class="nav-item has-treeview menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-truck-loading"></i>
-                                <p>Transport Handling</p>
-                                <i class="right fas fa-angle-left"></i>
+                                <p>Transport Handling
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../Transport/TransportActionTable.php" class="nav-link active">
-                                        <p>Transport Handling
-                                            <i class="right fas fa-angle-left"></i>
-                                        </p>
+                                        <i class="nav-icon fas fa-truck"></i>
+                                        <p>Transport Action</p>
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
                                     <a href="../Transport/TransportHandlingTable.php" class="nav-link">
-                                        <i class="nav-icon fas fa-dollar-sign"></i>
+                                        <i class="nav-icon fas fa-truck"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>
