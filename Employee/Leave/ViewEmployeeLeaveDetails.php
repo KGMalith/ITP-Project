@@ -7,6 +7,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 ?>
 <?php
 include '../../inc/dbconnect.php';
+include '../../inc/Dashboardcalculations.php';
 $Emp_ID = "";
 
 if (isset($_GET['eid'])) {
@@ -158,6 +159,7 @@ if (isset($_GET['eid'])) {
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Billing
                                     <i class="right fas fa-angle-left"></i>
+                                    <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -172,6 +174,7 @@ if (isset($_GET['eid'])) {
                                     <a href="../../Billing/SellingInvoiceList.php" class="nav-link">
                                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                         <p>Selling Invoice</p>
+                                        <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -230,14 +233,14 @@ if (isset($_GET['eid'])) {
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportActionTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-truck"></i>
+                                        <i class="nav-icon fas fa-truck"></i>
                                         <p>Transport Action</p>
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportHandlingTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-truck"></i>
+                                        <i class="nav-icon fas fa-truck"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>

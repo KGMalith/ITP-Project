@@ -7,7 +7,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 ?>
 <?php
 require '../inc/dbconnect.php';
-
+include '../inc/Dashboardcalculations.php';
 
 //getting the list of users
 $query = "SELECT o.OrderM_ID,o.Order_ID,c.cName,o.Order_Date,o.Order_D_Date,o.D_Status,o.t_status FROM orderm o, customer c WHERE o.customerID = c.customerID AND D_Status='Yes' AND o.t_status='0' AND t_d_status='0'";
@@ -132,6 +132,7 @@ $Expenses = mysqli_query($con, $query);
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Billing
                                     <i class="right fas fa-angle-left"></i>
+                                    <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -146,6 +147,7 @@ $Expenses = mysqli_query($con, $query);
                                     <a href="../Billing/SellingInvoiceList.php" class="nav-link">
                                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                         <p>Selling Invoice</p>
+                                        <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                     </a>
                                 </li>
                             </ul>

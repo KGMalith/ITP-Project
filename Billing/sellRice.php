@@ -1,6 +1,7 @@
 <?php
 include '../inc/dbconnect.php';
 include '../inc/sellinginvoiceidgenerator.php';
+include '../inc/Dashboardcalculations.php';
 
 SESSION_START();
 
@@ -16,7 +17,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 $fresult = '';
-$query = "SELECT * FROM orderm ORDER BY Order_ID ASC";
+$query = "SELECT * FROM orderm WHERE invoice_created='0' ORDER BY Order_ID ASC";
 $rest = mysqli_query($con, $query);
 while ($row = mysqli_fetch_assoc($rest)) {
     $fresult .= '<option value="' . $row["OrderM_ID"] . '">' . $row["Order_ID"] . '</option>';
@@ -39,6 +40,9 @@ if (isset($_POST['create_invoice'])) {
     $sql = "INSERT INTO sellinginvoicelist(SInvoiveID,orderID,SellingInvDate,CusID,finalAmt) VALUES ('$invoiceid','$orderid','$invoicedate','$customerid','$finalAmount')";
     mysqli_query($con, $sql);
     $invlistTableid = mysqli_insert_id($con);
+
+    $query = "UPDATE orderm SET invoice_created=1 WHERE OrderM_ID='" . $orderid . "'";
+    mysqli_query($con, $query);
 
     for ($a = 0; $a < count($_POST["itemName"]); $a++) {
         $sql = "INSERT INTO sellinginvoiceitem(sinlistTableid,SInvoiceID,itemName,itemQuan5kg,itemPrice5kg,actualAmount5kg,itemQuan10kg,itemPrice10kg,actualAmount10kg,itemQuan25kg,itemPrice25kg,actualAmount25kg,discount,subTotal) VALUES('$invlistTableid','$invoiceid','" . $_POST["itemName"][$a] . "','" . $_POST["itemQuantity5kg"][$a] . "','" . $_POST["itemPrice5kg"][$a] . "','" . $_POST["itemActualAmount5kg"][$a] . "','" . $_POST["itemQuantity10kg"][$a] . "','" . $_POST["itemPrice10kg"][$a] . "','" . $_POST["itemActualAmount10kg"][$a] . "','" . $_POST["itemQuantity25kg"][$a] . "','" . $_POST["itemPrice25kg"][$a] . "','" . $_POST["itemActualAmount25kg"][$a] . "','" . $_POST["itemDiscount"][$a] . "','" . $_POST["itemTotal"][$a] . "')";
@@ -168,6 +172,7 @@ if (isset($_POST['create_invoice'])) {
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Billing
                                     <i class="right fas fa-angle-left"></i>
+                                    <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -182,6 +187,7 @@ if (isset($_POST['create_invoice'])) {
                                     <a href="../Billing/SellingInvoiceList.php" class="nav-link active">
                                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                         <p>Selling Invoice</p>
+                                        <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                                     </a>
                                 </li>
                             </ul>

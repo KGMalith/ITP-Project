@@ -4,6 +4,7 @@ SESSION_START();
 if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
   header("Location: Login.php");
 }
+include 'inc/Dashboardcalculations.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,6 +128,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
                 <i class="nav-icon fas fa-file-invoice"></i>
                 <p>Billing
                   <i class="right fas fa-angle-left"></i>
+                  <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                 </p>
               </a>
               <ul class="nav nav-treeview">
@@ -141,6 +143,7 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
                   <a href="Billing/SellingInvoiceList.php" class="nav-link">
                     <i class="nav-icon fas fa-file-invoice-dollar"></i>
                     <p>Selling Invoice</p>
+                    <span class="badge badge-danger right"><?php num_of_new_orders(); ?></span>
                   </a>
                 </li>
               </ul>
@@ -358,9 +361,65 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
       <div class="content">
         <div class="container-fluid">
           <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
-            <!--your conetent here-->
+                <div class="info-box-content">
+                  <span class="info-box-text">CPU Traffic</span>
+                  <span class="info-box-number">
+                    10
+                    <small>%</small>
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
 
+                <div class="info-box-content">
+                  <span class="info-box-text">Likes</span>
+                  <span class="info-box-number">41,410</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+
+            <!-- fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">New Orders</span>
+                  <span class="info-box-number"><?php num_of_new_orders(); ?></span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="info-box mb-3">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">No Of Employees</span>
+                  <span class="info-box-number"><?php num_of_employees(); ?></span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
           </div>
           <!-- /.row -->
         </div><!-- /.container-fluid -->
