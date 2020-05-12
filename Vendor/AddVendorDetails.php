@@ -121,8 +121,9 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-file-invoice"></i>
-                <p>Billing</p>
-                <i class="right fas fa-angle-left"></i>
+                <p>Billing
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -142,18 +143,54 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
             </li>
 
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link ">
                 <i class="nav-icon fas fa-boxes"></i>
-                <p>Stock Management</p>
+                <p>Stock Management
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+
               </a>
+              <ul class="nav nav-treeview ">
+                <li class="nav-item">
+                  <a href="../Item/ItemTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+                    <p>Item Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/RicePriceTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-money-bill-wave"></i>
+                    <p>Rice Price Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addRiceStockTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p>Rice Stock Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addPaddyStockTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p>Paddy Stock Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addConvertPaddyStockTable.php" class="nav-link">
+                    <i class="nav-icon fab fa-pagelines"></i>
+                    <p>Paddy Process Management</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-truck-loading"></i>
-                <p>Transport Handling</p>
-                <i class="right fas fa-angle-left"></i>
+                <p>Transport Handling
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">

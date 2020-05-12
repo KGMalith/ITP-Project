@@ -75,6 +75,7 @@ if (isset($_POST['create_invoice'])) {
   <link rel="stylesheet" href="../form-validator/theme-default.min.css">
   <link rel="stylesheet" href="../sweetalert/sweetalert2.min.css">
   <script type='text/javascript' src="../Auto-Calc/example.js"></script>
+  <link rel="stylesheet" href="../date-picker/bootstrap-datepicker.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -167,8 +168,9 @@ if (isset($_POST['create_invoice'])) {
             <li class="nav-item has-treeview menu-open">
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-file-invoice"></i>
-                <p>Billing</p>
-                <i class="right fas fa-angle-left"></i>
+                <p>Billing
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -188,11 +190,46 @@ if (isset($_POST['create_invoice'])) {
             </li>
 
 
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link ">
                 <i class="nav-icon fas fa-boxes"></i>
-                <p>Stock Management</p>
+                <p>Stock Management
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+
               </a>
+              <ul class="nav nav-treeview ">
+                <li class="nav-item">
+                  <a href="../Item/ItemTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+                    <p>Item Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/RicePriceTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-money-bill-wave"></i>
+                    <p>Rice Price Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addRiceStockTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p>Rice Stock Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addPaddyStockTable.php" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p>Paddy Stock Management</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../Item/Stock/addConvertPaddyStockTable.php" class="nav-link">
+                    <i class="nav-icon fab fa-pagelines"></i>
+                    <p>Paddy Process Management</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <li class="nav-item has-treeview">
@@ -445,7 +482,19 @@ if (isset($_POST['create_invoice'])) {
                                   <div class="col-md-4"><br>
                                     <label>Invoice ID</label>
                                     <input type="text" name="invoiceno" id="invoiceno" class="form-control input-sm mb-2" placeholder="Enter Invoice Number" value="<?php echo $binvoiceid ?>" readonly>
-                                    <input type="text" name="invoice_date" id="date" class="form-control input-sm" placeholder="Select Invoice Date" value="<?php echo date("d-m-Y"); ?>" readonly>
+                                    <div class="form-group">
+                                      <div class="input-group date" data-provide="datepicker">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                          </span>
+                                        </div>
+                                        <input type="text" name="invoice_date" id="date" class="form-control input-sm" data-validation="required" data-validation-error-msg="Please Select Date">
+                                        <div class="input-group-addon">
+                                          <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                                 <div class="table-responsive">
@@ -571,6 +620,7 @@ if (isset($_POST['create_invoice'])) {
   <script src="../form-validator/jquery.form-validator.js"></script>
   <script src="../sweetalert/sweetalert2.all.min.js"></script>
   <script src="../Auto-Calc/jautocalc.js"></script>
+  <script src="../date-picker/bootstrap-datepicker.js"></script>
 
   <script>
     $(document).ready(function() {
