@@ -202,8 +202,9 @@
             <li class="nav-item has-treeview">
               <a href="" class="nav-link">
                 <i class="nav-icon fas fa-coins"></i>
-                <p>Expenses Tracking</p>
-                <i class="right fas fa-angle-left"></i>
+                <p>Expenses Tracking
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">

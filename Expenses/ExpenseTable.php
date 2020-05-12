@@ -197,8 +197,9 @@ $Expenses = mysqli_query($con, $query);
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-truck-loading"></i>
-                                <p>Transport Handling</p>
-                                <i class="right fas fa-angle-left"></i>
+                                <p>Transport Handling
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -220,8 +221,9 @@ $Expenses = mysqli_query($con, $query);
                         <li class="nav-item has-treeview menu-open">
                             <a href="" class="nav-link active">
                                 <i class="nav-icon fas fa-coins"></i>
-                                <p>Expenses Tracking</p>
-                                <i class="right fas fa-angle-left"></i>
+                                <p>Expenses Tracking
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
