@@ -17,7 +17,7 @@ if(isset($_POST['takeaction'])){
         exit();
     }
 
-    $sql = 'SELECT vehID FROM transport WHERE vehID=? AND t_status ="1"';
+    $sql = 'SELECT vehID FROM transport WHERE vehID=? AND t_status ="1" AND t_d_status="0"';
     $stmt = mysqli_stmt_init($con);
 
     if(!mysqli_stmt_prepare($stmt,$sql)){
@@ -35,7 +35,7 @@ if(isset($_POST['takeaction'])){
         }
     }
 
-    $sql = 'SELECT id FROM transport WHERE id=? AND t_status ="1"';
+    $sql = 'SELECT id FROM transport WHERE id=? AND t_status ="1" AND t_d_status="0"';
     $stmt = mysqli_stmt_init($con);
 
     if(!mysqli_stmt_prepare($stmt,$sql)){

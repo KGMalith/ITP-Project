@@ -240,19 +240,21 @@ if (isset($_POST['create_invoice'])) {
                 <i class="nav-icon fas fa-truck-loading"></i>
                 <p>Transport Handling
                   <i class="right fas fa-angle-left"></i>
+                  <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="../Transport/TransportActionTable.php" class="nav-link">
-                    <i class="nav-icon fas fa-truck"></i>
+                    <i class="nav-icon fas fa-shipping-fast"></i>
                     <p>Transport Action</p>
+                    <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                   </a>
                 </li>
 
                 <li class="nav-item">
                   <a href="../Transport/TransportHandlingTable.php" class="nav-link">
-                    <i class="nav-icon fas fa-truck"></i>
+                    <i class="nav-icon fas fa-shipping-fast"></i>
                     <p>Transport Handling</p>
                   </a>
                 </li>
@@ -628,6 +630,10 @@ if (isset($_POST['create_invoice'])) {
   <script src="../date-picker/bootstrap-datepicker.js"></script>
 
   <script>
+    $('.date').datepicker({
+      format: 'dd/mm/yyyy',
+    });
+
     $(document).ready(function() {
       $("#VendorName").change(function() {
         var vid = $(this).val();

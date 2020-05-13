@@ -10,7 +10,7 @@ require '../inc/dbconnect.php';
 include '../inc/Dashboardcalculations.php';
 
 //getting the list of users
-$query = "SELECT o.OrderM_ID,o.Order_ID,c.cName,o.Order_Date,o.Order_D_Date,o.D_Status,o.t_status FROM orderm o, customer c WHERE o.customerID = c.customerID AND D_Status='Yes' AND o.t_status='0' AND t_d_status='0'";
+$query = "SELECT o.OrderM_ID,o.Order_ID,c.cName,o.Order_Date,o.Order_D_Date,o.D_Status,o.t_status FROM orderm o, customer c WHERE o.customerID = c.customerID AND o.D_Status='Yes' AND o.t_status='0' AND o.t_d_status='0'";
 $Expenses = mysqli_query($con, $query);
 
 ?>
@@ -201,19 +201,21 @@ $Expenses = mysqli_query($con, $query);
                                 <i class="nav-icon fas fa-truck-loading"></i>
                                 <p>Transport Handling
                                     <i class="right fas fa-angle-left"></i>
+                                    <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../Transport/TransportActionTable.php" class="nav-link active">
-                                        <i class="nav-icon fas fa-truck"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Action</p>
+                                        <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
                                     <a href="../Transport/TransportHandlingTable.php" class="nav-link">
-                                        <i class="nav-icon fas fa-truck"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>
