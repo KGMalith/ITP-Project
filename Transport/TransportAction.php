@@ -590,7 +590,7 @@ if (isset($_GET['oid'])) {
 
     <script>
         $('.date').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy/mm/dd',
         });
     </script>
 

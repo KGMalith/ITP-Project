@@ -1,4 +1,9 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 include '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 
@@ -628,7 +633,7 @@ if (isset($_GET['stockid'])) {
 
     <script>
         $('.date').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
         });
 
         $.validate();

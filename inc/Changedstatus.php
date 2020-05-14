@@ -2,7 +2,7 @@
 include 'dbconnect.php';
 if(isset($_GET['tid'])){
     $tid = mysqli_real_escape_string($con,$_GET['tid']);
-    $date = date('d/m/Y');
+    $date = date('Y/m/d');
    
     $sql2 = "SELECT OrderM_ID FROM transport WHERE t_Id='".$tid."'";
     $result = mysqli_query($con,$sql2);

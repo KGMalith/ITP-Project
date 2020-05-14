@@ -8,6 +8,8 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 include 'inc/Dashboardcalculations.php';
 if (isset($_POST['generate'])) {
 
+  //geneating total buyed paddy stock and total sold rice stock
+
   $start = mysqli_real_escape_string($con, $_POST['joindate']);
   $end = mysqli_real_escape_string($con, $_POST['joindate2']);
   $item1 = 'ITEM1';
@@ -48,7 +50,7 @@ if (isset($_POST['generate'])) {
 }
 
 
-
+//current rice stock bag size wise
 $ricebagquan = get_current_rice_stock_bag_size('ITEM1');
 $itemOne5kgquan = $ricebagquan[0];
 $itemOne10kgquan = $ricebagquan[1];
@@ -65,6 +67,90 @@ $itemThree10kgquan = $ricebagquan3[1];
 $itemThree25kgquan = $ricebagquan3[2];
 
 
+//current paddy process stock
+$item1stk = paddy_Converting_item_quantity('ITEM1');
+$item2stk = paddy_Converting_item_quantity('ITEM2');
+$item3stk = paddy_Converting_item_quantity('ITEM3');
+
+$name1 = '';
+$name2 = '';
+$name3 = '';
+
+$name1 = get_Item_name_chart('ITEM1');
+$name2 = get_Item_name_chart('ITEM2');
+$name3 = get_Item_name_chart('ITEM3');
+
+$result2 = "'$name1','$name2','$name3'";
+
+$resultpaddyprocessquan = "$item1stk,$item2stk,$item3stk";
+
+//Monthly Revenue chart 
+$currentmonth = date('m');
+$arrayinc = array();
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $sellingincome = monthly_selling_income($i);
+  array_push($arrayinc, $sellingincome);
+}
+$val = '';
+foreach ($arrayinc as $id => $amount) {
+  $val = $val . ',' . $amount;
+}
+
+//Current Total Revenue
+$totalRevenue = 0;
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $sellingincome2 = monthly_selling_income($i);
+  $totalRevenue = $totalRevenue + $sellingincome2;
+}
+
+
+//Monthly Total Cost chart
+$arraycost = array();
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $cost = monthly_cost($i);
+  array_push($arraycost, $cost);
+}
+$val2 = '';
+foreach ($arraycost as $id => $amount) {
+  $val2 = $val2 . ',' . $amount;
+}
+
+//Current Total Cost
+$totalcost = 0;
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $cost2 = monthly_cost($i);
+  $totalcost = $totalcost + $cost2;
+}
+
+
+//Monthly Total Profit chart
+$arrayprofit = array();
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $profit = monthly_profit($i);
+  array_push($arrayprofit, $profit);
+}
+$val3 = '';
+foreach ($arrayprofit as $id => $amount) {
+  $val3 = $val3 . ',' . $amount;
+}
+
+//Current Total Profit
+$totalprofit = 0;
+for ($i = 1; $i <= $currentmonth; $i++) {
+
+  $profit2 = monthly_profit($i);
+  $totalprofit = $totalprofit + $profit2;
+}
+
+//Current Details Chart
+
+
+$currentdetails = "$totalRevenue,$totalcost,$totalprofit";
 
 ?>
 <!DOCTYPE html>
@@ -575,7 +661,7 @@ $itemThree25kgquan = $ricebagquan3[2];
                       Current Total Paddy Stock
                       <span class="float-right"><b><?php echo get_total_paddy_stock(); ?></b>/10,000 KG</span>
                       <div class="progress progress-sm">
-                        <div class="progress-bar bg-primary" style="width:<?php echo get_total_paddy_stock_precentage();?>%"></div>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:<?php echo get_total_paddy_stock_precentage(); ?>%"></div>
                       </div>
                     </div>
                     <!-- /.progress-group -->
@@ -584,7 +670,7 @@ $itemThree25kgquan = $ricebagquan3[2];
                       Current Total Rice Stock
                       <span class="float-right"><b><?php echo get_current_total_rice_stock('ITEM1', 'ITEM2', 'ITEM3'); ?></b>/100,000 Bags</span>
                       <div class="progress progress-sm">
-                        <div class="progress-bar bg-danger" style="width: <?php echo get_current_total_rice_stock_presentage(get_current_total_rice_stock('ITEM1', 'ITEM2', 'ITEM3')); ?>%"></div>
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width:<?php echo get_current_total_rice_stock_presentage(get_current_total_rice_stock('ITEM1', 'ITEM2', 'ITEM3')); ?>%"></div>
                       </div>
                     </div>
 
@@ -593,7 +679,7 @@ $itemThree25kgquan = $ricebagquan3[2];
                       <span class="progress-text">Current Total Paddy Process Stock</span>
                       <span class="float-right"><b><?php echo paddy_process_stock(); ?></b>/10,000 KG</span>
                       <div class="progress progress-sm">
-                        <div class="progress-bar bg-success" style="width: <?php echo paddy_Converting_process_precentage(paddy_process_stock()); ?>%"></div>
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:<?php echo paddy_Converting_process_precentage(paddy_process_stock()); ?>%"></div>
                       </div>
                     </div>
 
@@ -776,6 +862,106 @@ $itemThree25kgquan = $ricebagquan3[2];
 
           </div>
 
+          <div class="row">
+            <div class="card col-5">
+              <div class="card-header">
+                <h3 class="card-title">Current Paddy Process Stock</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="chart-responsive mt-5">
+                  <canvas id="pieChart3"></canvas>
+                </div>
+                <!-- ./chart-responsive -->
+                <!-- /.col -->
+
+
+                <!-- /.row -->
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <div class="col-1"></div>
+
+            <div class="card col-6">
+              <div class="card-header">
+                <h3 class="card-title">Current Details</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <div class="chart-responsive mt-5">
+                  <canvas id="pieChart4"></canvas>
+                </div>
+                <!-- ./chart-responsive -->
+                <!-- /.col -->
+
+
+                <!-- /.row -->
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Yearly Recap Report</h5>
+
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+
+                      <div class="chart">
+                        <!-- Sales Chart Canvas -->
+                        <canvas id="totalsalesChart"></canvas>
+                      </div>
+                      <!-- /.chart-responsive -->
+                    </div>
+
+                    <!-- /.col -->
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- ./card-body -->
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col-sm-4 col-6">
+                      <div class="description-block border-right">
+                        <h5 class="description-header">RS.&nbsp;<?php echo $totalRevenue ?></h5>
+                        <span class="description-text">CURRENT TOTAL REVENUE</span>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4 col-6">
+                      <div class="description-block border-right">
+                        <h5 class="description-header">RS.&nbsp;<?php echo $totalcost ?></h5>
+                        <span class="description-text">CURRENT TOTAL COST</span>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4 col-6">
+                      <div class="description-block border-right">
+                        <h5 class="description-header">RS.&nbsp;<?php echo $totalprofit ?></h5>
+                        <span class="description-text">CURRENT TOTAL PROFIT</span>
+                      </div>
+                      <!-- /.description-block -->
+                    </div>
+
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.card-footer -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+
           <!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
@@ -826,7 +1012,7 @@ $itemThree25kgquan = $ricebagquan3[2];
   <script>
     $.validate();
     $('.date').datepicker({
-      format: 'dd/mm/yyyy',
+      format: 'yyyy-mm-dd',
     });
   </script>
   <script>
@@ -852,12 +1038,12 @@ $itemThree25kgquan = $ricebagquan3[2];
           label: '# of Votes',
           data: [<?php echo $result ?>],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)',
+            'rgb(255, 159, 64)'
           ],
           borderColor: [
             'rgba(255, 99, 132, 1)',
@@ -893,6 +1079,32 @@ $itemThree25kgquan = $ricebagquan3[2];
             'rgb(51, 153, 255)',
             'rgb(0, 102, 204)',
           ],
+
+          borderWidth: 1
+        }]
+      },
+
+    });
+  </script>
+
+  <script>
+    var ctx = document.getElementById('pieChart3');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [<?php echo $result2 ?>],
+        datasets: [{
+          label: 'Stock(KG)',
+          barThickness: 'flex',
+          data: [<?php echo $resultpaddyprocessquan ?>],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
           borderColor: [
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
@@ -904,6 +1116,124 @@ $itemThree25kgquan = $ricebagquan3[2];
           borderWidth: 1
         }]
       },
+      options: {
+        scales: {
+          xAxes: [{
+            stacked: true
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        }
+      }
+
+
+    });
+  </script>
+
+  <script>
+    var ctx = document.getElementById('pieChart4');
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['TOTAL REVENUE', 'TOTAL COST', 'TOTAL PROFIT'],
+        datasets: [{
+          label: '',
+          data: [<?php echo $currentdetails ?>],
+          backgroundColor: [
+            'rgb(51, 204, 204)',
+            'rgb(255, 51, 51)',
+            'rgb(0, 204, 0)',
+          ],
+          borderWidth: 1
+        }]
+      },
+
+    });
+  </script>
+
+  <script>
+    var ctx = document.getElementById('totalsalesChart');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+            label: 'Monthly Total Revenue (Rs)',
+            fill: false,
+            data: [<?php echo $val ?>],
+            borderColor: [
+              'rgba(255, 206, 86, 1)',
+            ],
+            pointBorderColor: "black",
+            pointBackgroundColor: "white",
+            pointBorderWidth: 1,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: "yellow",
+            pointHoverBorderColor: "brown",
+            pointHoverBorderWidth: 2,
+            pointRadius: 4,
+            pointHitRadius: 10,
+            spanGaps: true,
+            borderWidth: 5
+          }, {
+
+            label: 'Monthly Total Cost (Rs)',
+            fill: false,
+            barThickness: 'flex',
+            data: [<?php echo $val2 ?>],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+
+            ],
+            pointBorderColor: "black",
+            pointBackgroundColor: "white",
+            pointBorderWidth: 1,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: "yellow",
+            pointHoverBorderColor: "brown",
+            pointHoverBorderWidth: 2,
+            pointRadius: 4,
+            pointHitRadius: 10,
+            spanGaps: true,
+            borderWidth: 5,
+          }, {
+            label: 'Monthly Total Profit (Rs)',
+            fill: false,
+            barThickness: 'flex',
+            data: [<?php echo $val3 ?>],
+            borderColor: [
+              'rgb(71, 209, 71)',
+            ],
+            pointBorderColor: "black",
+            pointBackgroundColor: "white",
+            pointBorderWidth: 1,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: "yellow",
+            pointHoverBorderColor: "brown",
+            pointHoverBorderWidth: 2,
+            pointRadius: 4,
+            pointHitRadius: 10,
+            spanGaps: true,
+            borderWidth: 5,
+          }
+
+
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            stacked: false
+          }],
+          yAxes: [{
+              stacked: false
+            }
+
+          ]
+        }
+      }
+
 
     });
   </script>

@@ -1,5 +1,9 @@
 <?php
+SESSION_START();
 
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../Login.php");
+}
 ?>
 <?php
 require '../inc/dbconnect.php';

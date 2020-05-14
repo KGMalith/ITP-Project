@@ -320,7 +320,75 @@ function get_current_rice_stock_bag_size($ricrType)
     return $array;
 }
 
+function monthly_selling_income($month){
+    include 'dbconnect.php';
 
+    $currentyear = date('Y');
+    $startd = "$currentyear-$month-1";
+    $endd = "$currentyear-$month-31";
+    $finalamt = 0;
+
+    $sql = "SELECT SUM(s.finalAmt) AS totalamt FROM sellinginvoicelist s WHERE s.SellingInvDate > '" . $startd."' AND s.SellingInvDate < '". $endd."'";
+    $result = mysqli_query($con,$sql);
+    $row = mysqli_fetch_assoc($result);
+    $finalamt = $row['totalamt'];
+
+
+    return $finalamt;
+
+}
+
+function monthly_expenses($month){
+    include 'dbconnect.php';
+
+    $currentyear = date('Y');
+    $startd = "$currentyear-$month-1";
+    $endd = "$currentyear-$month-31";
+    $finalamt = 0;
+
+    $sql = "SELECT SUM(e.Amount) AS TotalExpense FROM expense e WHERE e.Date >= '". $startd."' AND e.Date <= '". $endd."'";
+    $result = mysqli_query($con, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $finalamt = $row['TotalExpense'];
+
+
+    return $finalamt;
+}
+
+function monthly_paddy_buying_cost($month){
+    include 'dbconnect.php';
+
+    $currentyear = date('Y');
+    $startd = "$currentyear-$month-1";
+    $endd = "$currentyear-$month-31";
+    $finalamt = 0;
+
+    $sql = "SELECT SUM(b.finalAmount) AS BuyingCost FROM buyinginvoicelist b WHERE b.orderDate >= '". $startd."' AND b.orderDate <= '". $endd."'";
+    $result = mysqli_query($con, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $finalamt = $row['BuyingCost'];
+
+
+    return $finalamt;
+}
+
+function monthly_cost($month){
+
+    $expensecost = monthly_expenses($month);
+    $buyingcost = monthly_paddy_buying_cost($month);
+
+    $total = ($expensecost + $buyingcost);
+    return $total;
+}
+
+function monthly_profit($month){
+
+    $income = monthly_selling_income($month);
+    $totalexpense = monthly_cost($month);
+    $finalprofit = ($income - $totalexpense);
+
+    return $finalprofit;
+}
 
 
 

@@ -1,10 +1,15 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 require '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 
 
 //getting the list of users
-$query = "SELECT r.rs_ID,i.itemName,r.stock5kg,r.stock10kg,r.stock25kg FROM items i, ricestock r WHERE r.itemID = i.I_ID";
+$query = "SELECT r.rs_ID,i.itemName,r.stock5kg,r.stock10kg,r.stock25kg,r.stockaddDate FROM items i, ricestock r WHERE r.itemID = i.I_ID";
 $items = mysqli_query($con, $query);
 
 ?>
@@ -393,6 +398,7 @@ $items = mysqli_query($con, $query);
                                         <thead>
                                             <tr>
                                                 <th>Item Name</th>
+                                                <th style="width:11%">Date</th>
                                                 <th>Stock 5KG </th>
                                                 <th>Stock 10KG</th>
                                                 <th>Stock 25KG</th>
@@ -403,6 +409,7 @@ $items = mysqli_query($con, $query);
                                             <?php
                                             while ($row = mysqli_fetch_assoc($items)) {
                                                 $Item_ID = $row['rs_ID'];
+                                                $date = $row['stockaddDate'];
                                                 $ItemName = $row['itemName'];
                                                 $Stock5kg = $row['stock5kg'];
                                                 $Stock10kg = $row['stock10kg'];
@@ -413,6 +420,7 @@ $items = mysqli_query($con, $query);
 
                                                 <tr>
                                                     <td><?php echo $ItemName ?></td>
+                                                    <td><?php echo  $date ?></td>
                                                     <td><?php echo $Stock5kg ?></td>
                                                     <td><?php echo $Stock10kg ?></td>
                                                     <td><?php echo $Stock25kg ?></td>

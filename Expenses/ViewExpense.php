@@ -627,8 +627,8 @@ if (isset($_GET['EXid'])) {
         $.validate();
     </script>
     <script>
-        $('.datepicker').datepicker({
-            format: 'dd/mm/yyyy',
+        $('.date').datepicker({
+            format: 'yyyy-mm-dd',
         });
     </script>
     <script>

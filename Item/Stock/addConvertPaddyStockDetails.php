@@ -1,4 +1,9 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 include '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 
@@ -451,9 +456,9 @@ if (isset($_GET['cpid'])) {
                                                     </div>
                                                     <?php
                                                     if (isset($_GET['date'])) {
-                                                        echo '<input type="text" name="startdate" class="form-control" data-validation="required" data-validation-error-msg="Please Select Date" value="' . $_GET['date'] . '">';
+                                                        echo '<input type="text" name="startdate" autocomplete="off" class="form-control" data-validation="required" data-validation-error-msg="Please Select Date" value="' . $_GET['date'] . '">';
                                                     } else {
-                                                        echo '<input type="text" name="startdate" class="form-control" data-validation="required" data-validation-error-msg="Please Select Date" value="' . $startdate . '">';
+                                                        echo '<input type="text" name="startdate" autocomplete="off" class="form-control" data-validation="required" data-validation-error-msg="Please Select Date" value="' . $startdate . '">';
                                                     }
                                                     ?>
                                                     <div class="input-group-addon">
@@ -612,7 +617,7 @@ if (isset($_GET['cpid'])) {
         $.validate();
 
         $('.date').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
         });
 
         $('#area').restrictLength($('#maxlength'));

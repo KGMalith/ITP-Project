@@ -1,4 +1,9 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 include '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 
@@ -416,7 +421,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                                     </div>
-                                                    <input type="text" name="initdate" class="form-control" value="<?php echo date('d/m/Y') ?>" readonly>
+                                                    <input type="text" name="initdate" class="form-control" value="<?php echo date('Y-m-d') ?>" readonly>
                                                 </div>
                                             </div>
 

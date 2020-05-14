@@ -1,4 +1,9 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 include '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 
@@ -415,7 +420,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                                             <i class="far fa-calendar-alt"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" name="refilldate" class="form-control" data-validation="required" data-validation-error-msg="Please Select Date">
+                                                    <input type="text" name="refilldate" class="form-control" autocomplete="off" data-validation="required" data-validation-error-msg="Please Select Date">
                                                     <div class="input-group-addon">
                                                         <span class="glyphicon glyphicon-th"></span>
                                                     </div>
@@ -590,7 +595,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     <script>
         $('.date').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
         });
 
         $.validate();

@@ -791,7 +791,7 @@ include '../inc/Dashboardcalculations.php';
 
   <script>
     $('.date').datepicker({
-      format: 'dd/mm/yyyy',
+      format: 'yyyy-mm-dd',
     });
   </script>
 

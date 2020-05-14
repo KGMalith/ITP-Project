@@ -1,4 +1,9 @@
 <?php
+SESSION_START();
+
+if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
+    header("Location: ../../Login.php");
+}
 require '../../inc/dbconnect.php';
 include '../../inc/Dashboardcalculations.php';
 

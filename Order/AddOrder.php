@@ -428,7 +428,7 @@ include '../inc/Dashboardcalculations.php';
                               <i class="far fa-calendar-alt"></i>
                             </span>
                           </div>
-                          <input type="text" name="orderdate" class="form-control" value="<?php echo Date('d/m/Y'); ?>" readonly>
+                          <input type="text" name="orderdate" class="form-control" value="<?php echo Date('Y-m-d'); ?>" readonly>
                         </div>
                       </div>
 
@@ -544,7 +544,7 @@ include '../inc/Dashboardcalculations.php';
 
   <script>
     $('.date').datepicker({
-      format: 'dd/mm/yyyy',
+      format: 'yyyy-mm-dd',
     });
   </script>
 

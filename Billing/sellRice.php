@@ -556,7 +556,7 @@ if (isset($_POST['create_invoice'])) {
                                                                                         <i class="far fa-calendar-alt"></i>
                                                                                     </span>
                                                                                 </div>
-                                                                                <input type="text" name="invoice_date" id="date" class="form-control input-sm" data-validation="required" data-validation-error-msg="Please Select Date">
+                                                                                <input type="text" name="invoice_date" id="date" class="form-control input-sm" autocomplete="off" data-validation="required" data-validation-error-msg="Please Select Date">
                                                                                 <div class="input-group-addon">
                                                                                     <span class="glyphicon glyphicon-th"></span>
                                                                                 </div>
@@ -893,7 +893,7 @@ if (isset($_POST['create_invoice'])) {
         $.validate();
 
         $('.date').datepicker({
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
         });
     </script>
 
