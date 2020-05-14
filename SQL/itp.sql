@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2020 at 03:47 PM
+-- Generation Time: May 14, 2020 at 01:53 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -46,8 +46,12 @@ CREATE TABLE `buyinginvoiceitem` (
 --
 
 INSERT INTO `buyinginvoiceitem` (`id`, `inlistTableId`, `BInvoiceID`, `itemName`, `itemQuantity`, `itemPrice`, `actualAmount`, `discount`, `humidity`, `total`) VALUES
-(9, 9, 'BINVOICE1', '1', 250, '66.00', '16500.00', '0.00', 'NO', '16500.00'),
-(10, 9, 'BINVOICE1', '2', 500, '250.00', '125000.00', '0.00', 'YES', '125000.00');
+(14, 11, 'BINVOICE1', '1', 250, '25.00', '6250.00', '0.00', 'NO', '6250.00'),
+(15, 11, 'BINVOICE1', '2', 300, '35.00', '10500.00', '0.00', 'NO', '10500.00'),
+(16, 11, 'BINVOICE1', '3', 400, '45.00', '18000.00', '0.00', 'NO', '18000.00'),
+(17, 12, 'BINVOICE2', '1', 100, '25.00', '2500.00', '0.00', 'YES', '2500.00'),
+(18, 12, 'BINVOICE2', '2', 100, '30.00', '3000.00', '0.00', 'YES', '3000.00'),
+(19, 12, 'BINVOICE2', '3', 100, '35.00', '3500.00', '0.00', 'YES', '3500.00');
 
 -- --------------------------------------------------------
 
@@ -58,7 +62,7 @@ INSERT INTO `buyinginvoiceitem` (`id`, `inlistTableId`, `BInvoiceID`, `itemName`
 CREATE TABLE `buyinginvoicelist` (
   `id` int(11) NOT NULL,
   `BInvoiceID` varchar(50) NOT NULL,
-  `orderDate` varchar(20) NOT NULL,
+  `orderDate` date NOT NULL,
   `vendorid` int(11) NOT NULL,
   `finalAmount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -68,7 +72,32 @@ CREATE TABLE `buyinginvoicelist` (
 --
 
 INSERT INTO `buyinginvoicelist` (`id`, `BInvoiceID`, `orderDate`, `vendorid`, `finalAmount`) VALUES
-(9, 'BINVOICE1', '10-05-2020', 3, '141500.00');
+(11, 'BINVOICE1', '2020-05-14', 3, '34750.00'),
+(12, 'BINVOICE2', '2020-05-31', 4, '9000.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `convertpaddy`
+--
+
+CREATE TABLE `convertpaddy` (
+  `cp_ID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `convertStatus` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `convertpaddy`
+--
+
+INSERT INTO `convertpaddy` (`cp_ID`, `itemID`, `startDate`, `endDate`, `quantity`, `convertStatus`) VALUES
+(4, 2, '2020-05-02', '0000-00-00', 280, 0),
+(6, 3, '2020-05-01', '0000-00-00', 350, 0),
+(7, 1, '2020-05-14', '0000-00-00', 300, 0);
 
 -- --------------------------------------------------------
 
@@ -136,12 +165,12 @@ CREATE TABLE `employee` (
   `empid` varchar(50) NOT NULL,
   `fullname` varchar(200) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `dob` varchar(50) NOT NULL,
+  `dob` date NOT NULL,
   `gender` varchar(10) NOT NULL,
   `nicnum` varchar(12) NOT NULL,
   `mnumber` varchar(10) NOT NULL,
   `empaddress` varchar(250) NOT NULL,
-  `jondate` varchar(50) NOT NULL,
+  `jondate` date NOT NULL,
   `emptype` varchar(15) NOT NULL,
   `designation` varchar(25) NOT NULL,
   `DrivingLicenNum` varchar(50) NOT NULL,
@@ -154,12 +183,14 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`id`, `empid`, `fullname`, `name`, `dob`, `gender`, `nicnum`, `mnumber`, `empaddress`, `jondate`, `emptype`, `designation`, `DrivingLicenNum`, `Imglocation`, `Imgstatus`) VALUES
-(15, 'EMP1', 'test', 'dsdsdsdds', '07/17/1997', 'Male', '46545616', '0779023434', 'ddlldmskdsk', '01/10/2020', 'Permanent', 'Driver', '12345695g', '../Uploads/profileEMP1.jpg', '1'),
-(16, 'EMP2', 'test123', 'dsdsdsdds', '07/17/1997', 'Female', '46545616', '0779023434', 'ddlldmskdsk', '01/10/2020', 'Contract', 'Worker', '', '', '0'),
-(17, 'EMP3', 'test3', 'dsdsdsdds', '07/17/1997', 'Male', '46545616', '0779023434', 'ddlldmskdsk', '01/10/2020', 'Permanent', 'Supervisor', '', '../Uploads/profileEMP3.jpg', '0'),
-(18, 'EMP4', 'rusiru', 'alvin', '02/12/1997', 'Male', '6464161466a', '0779023434', 'ddlldmskdsk', '01/01/2020', 'Permanent', 'Vehicle Mechanic', '', '../Uploads/profileEMP4.jpg', '1'),
-(19, 'EMP5', 'sasas', 'isuru', '03/18/1992', 'Male', '4646464646', '0123456789', 'dsdcdscs6csdcsdscdscsc', '01/02/2020', 'Contract', 'Driver', '45454545', '', '0'),
-(21, 'EMP6', 'asasasasdd', 'asasasas', '03/06/1992', 'Male', '965552333', '0776316717', 'sadasdsadasdad', '01/02/2020', 'Contract', 'Driver', '1131313131', '', '0');
+(15, 'EMP1', 'test', 'dsdsdsdds', '0000-00-00', 'Male', '46545616', '0779023434', 'ddlldmskdsk', '0000-00-00', 'Permanent', 'Driver', '12345695g', '../Uploads/profileEMP1.jpg', '1'),
+(16, 'EMP2', 'test123', 'dsdsdsdds', '0000-00-00', 'Female', '46545616', '0779023434', 'ddlldmskdsk', '0000-00-00', 'Contract', 'Worker', '', '', '0'),
+(17, 'EMP3', 'test3', 'dsdsdsdds', '0000-00-00', 'Male', '46545616', '0779023434', 'ddlldmskdsk', '0000-00-00', 'Permanent', 'Supervisor', '', '../Uploads/profileEMP3.jpg', '0'),
+(18, 'EMP4', 'rusiru', 'alvin', '0000-00-00', 'Male', '6464161466a', '0779023434', 'ddlldmskdsk', '0000-00-00', 'Permanent', 'Vehicle Mechanic', '', '../Uploads/profileEMP4.jpg', '1'),
+(19, 'EMP5', 'sasas', 'isuru', '0000-00-00', 'Male', '4646464646', '0123456789', 'dsdcdscs6csdcsdscdscsc', '0000-00-00', 'Contract', 'Driver', '45454545', '', '0'),
+(21, 'EMP6', 'asasasasdd', 'asasasas', '0000-00-00', 'Male', '965552333', '0776316717', 'sadasdsadasdad', '0000-00-00', 'Contract', 'Driver', '1131313131', '', '0'),
+(22, 'EMP7', 'dcasc', 'sacsac', '0000-00-00', 'Male', '15161561', '0123456789', '65dcsacacsacasc', '0000-00-00', 'Contract', 'Worker', '', '', '0'),
+(23, 'EMP8', 'cascascac', 'ascsacsacackac', '2018-02-14', 'Male', 'ascsacaa', '7575557575', 'clknasclkscal', '2020-05-20', 'Contract', 'Worker', '', '', '0');
 
 -- --------------------------------------------------------
 
@@ -169,7 +200,7 @@ INSERT INTO `employee` (`id`, `empid`, `fullname`, `name`, `dob`, `gender`, `nic
 
 CREATE TABLE `expense` (
   `EXPID` int(11) NOT NULL,
-  `Date` varchar(20) NOT NULL,
+  `Date` date NOT NULL,
   `ExpGID` int(11) NOT NULL,
   `ExpTID` int(11) NOT NULL,
   `Amount` decimal(10,2) NOT NULL,
@@ -181,8 +212,9 @@ CREATE TABLE `expense` (
 --
 
 INSERT INTO `expense` (`EXPID`, `Date`, `ExpGID`, `ExpTID`, `Amount`, `PMethod`) VALUES
-(5, '23/04/2020', 8, 3, '25000.00', 'Cash'),
-(6, '01/05/2020', 9, 4, '2000.00', 'Cheque');
+(5, '2020-05-06', 8, 3, '25000.00', 'Cash'),
+(6, '2020-05-02', 9, 4, '2000.00', 'Cheque'),
+(7, '2020-05-19', 9, 4, '2500.00', 'Cash');
 
 -- --------------------------------------------------------
 
@@ -286,19 +318,47 @@ CREATE TABLE `orderm` (
   `OrderM_ID` int(11) NOT NULL,
   `Order_ID` varchar(50) NOT NULL,
   `customerID` int(11) NOT NULL,
-  `Order_Date` varchar(50) NOT NULL,
-  `Order_D_Date` varchar(50) NOT NULL,
+  `Order_Date` date NOT NULL,
+  `Order_D_Date` date NOT NULL,
   `D_Status` varchar(10) NOT NULL,
   `t_status` varchar(2) NOT NULL DEFAULT '0',
-  `t_d_status` int(2) NOT NULL DEFAULT '0'
+  `t_d_status` int(2) NOT NULL DEFAULT '0',
+  `invoice_created` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `orderm`
 --
 
-INSERT INTO `orderm` (`OrderM_ID`, `Order_ID`, `customerID`, `Order_Date`, `Order_D_Date`, `D_Status`, `t_status`, `t_d_status`) VALUES
-(12, 'ODR1', 6, '08/05/2020', '17/05/2020', 'Yes', '1', 1);
+INSERT INTO `orderm` (`OrderM_ID`, `Order_ID`, `customerID`, `Order_Date`, `Order_D_Date`, `D_Status`, `t_status`, `t_d_status`, `invoice_created`) VALUES
+(15, 'ODR1', 6, '2020-05-14', '2020-05-21', 'Yes', '1', 0, 1),
+(16, 'ODR2', 7, '2020-05-14', '2020-05-29', 'Yes', '0', 0, 1),
+(17, 'ODR3', 6, '2020-05-14', '2020-05-21', 'Yes', '0', 0, 1),
+(18, 'ODR4', 7, '2020-05-14', '2020-05-27', 'Yes', '0', 0, 1),
+(19, 'ODR5', 6, '2020-05-14', '2020-05-30', 'Yes', '0', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paddystock`
+--
+
+CREATE TABLE `paddystock` (
+  `p_ID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL,
+  `initDate` date NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `Descrp` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `paddystock`
+--
+
+INSERT INTO `paddystock` (`p_ID`, `itemID`, `initDate`, `quantity`, `Descrp`) VALUES
+(4, 1, '2020-05-14', 1000, ''),
+(5, 2, '2020-05-14', 1000, ''),
+(6, 3, '2020-05-14', 1000, '');
 
 -- --------------------------------------------------------
 
@@ -321,7 +381,32 @@ CREATE TABLE `riceprice` (
 
 INSERT INTO `riceprice` (`rpID`, `item_ID`, `price5kg`, `price10kg`, `price25kg`, `Descrip`) VALUES
 (1, 1, '55.00', '65.00', '75.00', ''),
-(2, 3, '35.00', '0.00', '75.00', '');
+(2, 3, '35.00', '55.00', '75.00', ''),
+(3, 2, '30.00', '35.00', '45.00', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ricestock`
+--
+
+CREATE TABLE `ricestock` (
+  `rs_ID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL,
+  `stockaddDate` date NOT NULL,
+  `stock5kg` int(11) NOT NULL,
+  `stock10kg` int(11) NOT NULL,
+  `stock25kg` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ricestock`
+--
+
+INSERT INTO `ricestock` (`rs_ID`, `itemID`, `stockaddDate`, `stock5kg`, `stock10kg`, `stock25kg`) VALUES
+(1, 1, '2020-05-06', 1000, 1000, 1000),
+(2, 2, '2020-05-03', 1000, 1000, 1000),
+(3, 3, '2020-05-10', 1000, 1000, 1000);
 
 -- --------------------------------------------------------
 
@@ -352,8 +437,14 @@ CREATE TABLE `sellinginvoiceitem` (
 --
 
 INSERT INTO `sellinginvoiceitem` (`id`, `sinlistTableid`, `SInvoiceID`, `itemName`, `itemQuan5kg`, `itemPrice5kg`, `actualAmount5kg`, `itemQuan10kg`, `itemPrice10kg`, `actualAmount10kg`, `itemQuan25kg`, `itemPrice25kg`, `actualAmount25kg`, `discount`, `subTotal`) VALUES
-(3, 2, 'SINVOICE1', 1, 250, '55.00', '13750.00', 0, '0.00', '0.00', 100, '75.00', '7500.00', '1500.00', '19750.00'),
-(4, 2, 'SINVOICE1', 3, 160, '35.00', '5600.00', 0, '0.00', '0.00', 0, '0.00', '0.00', '500.00', '5100.00');
+(10, 5, 'SINVOICE1', 1, 250, '55.00', '13750.00', 350, '65.00', '22750.00', 400, '75.00', '30000.00', '0.00', '66500.00'),
+(11, 5, 'SINVOICE1', 2, 300, '30.00', '9000.00', 250, '35.00', '8750.00', 500, '45.00', '22500.00', '0.00', '40250.00'),
+(12, 6, 'SINVOICE2', 1, 100, '55.00', '5500.00', 300, '65.00', '19500.00', 400, '75.00', '30000.00', '0.00', '55000.00'),
+(13, 6, 'SINVOICE2', 2, 100, '30.00', '3000.00', 200, '35.00', '7000.00', 350, '45.00', '15750.00', '0.00', '25750.00'),
+(14, 6, 'SINVOICE2', 3, 100, '35.00', '3500.00', 250, '55.00', '13750.00', 375, '75.00', '28125.00', '0.00', '45375.00'),
+(15, 7, 'SINVOICE3', 1, 250, '55.00', '13750.00', 230, '25.00', '5750.00', 440, '55.00', '24200.00', '0.00', '43700.00'),
+(16, 8, 'SINVOICE4', 3, 55, '60.00', '3300.00', 550, '55.00', '30250.00', 230, '25.00', '5750.00', '0.00', '39300.00'),
+(17, 9, 'SINVOICE5', 2, 550, '55.00', '30250.00', 256, '23.00', '5888.00', 300, '24.00', '7200.00', '0.00', '43338.00');
 
 -- --------------------------------------------------------
 
@@ -365,7 +456,7 @@ CREATE TABLE `sellinginvoicelist` (
   `id` int(11) NOT NULL,
   `SInvoiveID` varchar(50) NOT NULL,
   `orderID` varchar(50) NOT NULL,
-  `SellingInvDate` varchar(50) NOT NULL,
+  `SellingInvDate` date NOT NULL,
   `CusID` int(11) NOT NULL,
   `finalAmt` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -375,7 +466,11 @@ CREATE TABLE `sellinginvoicelist` (
 --
 
 INSERT INTO `sellinginvoicelist` (`id`, `SInvoiveID`, `orderID`, `SellingInvDate`, `CusID`, `finalAmt`) VALUES
-(2, 'SINVOICE1', '12', '10-05-2020', 6, '24850.00');
+(5, 'SINVOICE1', '15', '2020-05-07', 6, '106750.00'),
+(6, 'SINVOICE2', '16', '2020-05-21', 7, '126125.00'),
+(7, 'SINVOICE3', '17', '2020-01-16', 6, '43700.00'),
+(8, 'SINVOICE4', '18', '2020-04-21', 7, '39300.00'),
+(9, 'SINVOICE5', '19', '2020-03-10', 7, '43338.00');
 
 -- --------------------------------------------------------
 
@@ -389,7 +484,7 @@ CREATE TABLE `transport` (
   `vtypeID` int(11) NOT NULL,
   `vehID` int(11) NOT NULL,
   `id` int(11) NOT NULL,
-  `dil_Date` varchar(50) NOT NULL,
+  `dil_Date` date NOT NULL,
   `t_status` varchar(2) NOT NULL DEFAULT '0',
   `t_d_status` int(2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -399,7 +494,9 @@ CREATE TABLE `transport` (
 --
 
 INSERT INTO `transport` (`t_Id`, `OrderM_ID`, `vtypeID`, `vehID`, `id`, `dil_Date`, `t_status`, `t_d_status`) VALUES
-(12, 12, 9, 5, 15, '08/05/2020', '1', 1);
+(12, 12, 9, 5, 15, '0000-00-00', '1', 1),
+(13, 14, 9, 5, 15, '2020-05-14', '1', 1),
+(14, 15, 8, 6, 21, '0000-00-00', '1', 0);
 
 -- --------------------------------------------------------
 
@@ -514,6 +611,12 @@ ALTER TABLE `buyinginvoicelist`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `convertpaddy`
+--
+ALTER TABLE `convertpaddy`
+  ADD PRIMARY KEY (`cp_ID`);
+
+--
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
@@ -568,10 +671,22 @@ ALTER TABLE `orderm`
   ADD PRIMARY KEY (`OrderM_ID`);
 
 --
+-- Indexes for table `paddystock`
+--
+ALTER TABLE `paddystock`
+  ADD PRIMARY KEY (`p_ID`);
+
+--
 -- Indexes for table `riceprice`
 --
 ALTER TABLE `riceprice`
   ADD PRIMARY KEY (`rpID`);
+
+--
+-- Indexes for table `ricestock`
+--
+ALTER TABLE `ricestock`
+  ADD PRIMARY KEY (`rs_ID`);
 
 --
 -- Indexes for table `sellinginvoiceitem`
@@ -623,13 +738,19 @@ ALTER TABLE `vendor`
 -- AUTO_INCREMENT for table `buyinginvoiceitem`
 --
 ALTER TABLE `buyinginvoiceitem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `buyinginvoicelist`
 --
 ALTER TABLE `buyinginvoicelist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `convertpaddy`
+--
+ALTER TABLE `convertpaddy`
+  MODIFY `cp_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -647,13 +768,13 @@ ALTER TABLE `empleave`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `expense`
 --
 ALTER TABLE `expense`
-  MODIFY `EXPID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `EXPID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `expensegroup`
@@ -671,7 +792,7 @@ ALTER TABLE `expensetype`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `I_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `I_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `leavetype`
@@ -683,31 +804,43 @@ ALTER TABLE `leavetype`
 -- AUTO_INCREMENT for table `orderm`
 --
 ALTER TABLE `orderm`
-  MODIFY `OrderM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `OrderM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `paddystock`
+--
+ALTER TABLE `paddystock`
+  MODIFY `p_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `riceprice`
 --
 ALTER TABLE `riceprice`
-  MODIFY `rpID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `rpID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `ricestock`
+--
+ALTER TABLE `ricestock`
+  MODIFY `rs_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sellinginvoiceitem`
 --
 ALTER TABLE `sellinginvoiceitem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `sellinginvoicelist`
 --
 ALTER TABLE `sellinginvoicelist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `transport`
 --
 ALTER TABLE `transport`
-  MODIFY `t_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `t_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `user`
