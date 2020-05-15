@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2020 at 01:53 PM
+-- Generation Time: May 15, 2020 at 10:43 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -136,7 +136,7 @@ CREATE TABLE `empleave` (
   `empid` int(11) NOT NULL,
   `Lid` int(11) NOT NULL,
   `DaysTaken` varchar(50) NOT NULL DEFAULT '0',
-  `days` varchar(200) NOT NULL,
+  `days` varchar(300) NOT NULL,
   `Reason` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -145,14 +145,7 @@ CREATE TABLE `empleave` (
 --
 
 INSERT INTO `empleave` (`LeaveID`, `empid`, `Lid`, `DaysTaken`, `days`, `Reason`) VALUES
-(2, 15, 9, '7', '01/01/2020', ''),
-(3, 16, 10, '2', '01/07/2020,01/08/2020', ''),
-(4, 17, 9, '1', '01/08/2020', ''),
-(5, 16, 11, '1', '01/08/2020', ''),
-(6, 15, 8, '5', '01/01/2020,01/02/2020,01/03/2020,01/04/2020,01/05/2020', ''),
-(7, 19, 12, '2', '04/14/2020,04/15/2020', ''),
-(8, 15, 10, '1', '05/01/2020', ''),
-(9, 16, 15, '7', '10/05/2020,11/05/2020,12/05/2020,13/05/2020,14/05/2020,15/05/2020,16/05/2020', '');
+(11, 16, 17, '2', '2020-05-27,2020-05-28', '');
 
 -- --------------------------------------------------------
 
@@ -762,7 +755,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `empleave`
 --
 ALTER TABLE `empleave`
-  MODIFY `LeaveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `LeaveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `employee`
