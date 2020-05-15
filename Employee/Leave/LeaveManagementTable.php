@@ -206,7 +206,7 @@ include '../../inc/Dashboardcalculations.php';
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportActionTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Action</p>
                                         <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                     </a>
@@ -214,7 +214,7 @@ include '../../inc/Dashboardcalculations.php';
 
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportHandlingTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>
@@ -307,6 +307,12 @@ include '../../inc/Dashboardcalculations.php';
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
                         </li>
 
                         <li class="nav-item has-treeview">
@@ -449,86 +455,9 @@ include '../../inc/Dashboardcalculations.php';
 
                                 <br>
                             </div>
-                            <div class="row mt-4">
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-warning" onclick="history.go(-1);" value="Back"><i class="fas fa-arrow-left"></i> Back</button>
-                                </div>
-                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
-
-                    <div class="card mb-5">
-                        <div class="card-header">
-                            <h3 class="card-title">Employees Leave Table</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" data-placement="top" title="Minimize">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-
-
-
-                            <?php if (isset($_GET['error']))
-                                if ($_GET['error'] == "SQLError") : ?>
-                                <div class="sqlerror" data-sql="<?= $_GET['SQLError']; ?>"></div>
-                            <?php endif;  ?>
-
-
-                            <div class="table-responsive">
-                                <div class="dataTables_wrapper container-fluid dt-bootstrap4">
-                                    <table id="example1" class="table table-bordered table-hover">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th style="width: 12%">Employee ID</th>
-                                                <th>Employee Name</th>
-                                                <th>Leave Name </th>
-                                                <th style="width: 12%">No Of Days Taken</th>
-                                                <th>Days</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $query = "SELECT e.empid,e.name, l.LeaveName,el.DaysTaken,el.days FROM empleave el,leavetype l, employee e WHERE e.id = el.empid AND el.Lid = l.Lid ORDER BY e.empid";
-                                            $employees = mysqli_query($con, $query);
-                                            while ($row = mysqli_fetch_assoc($employees)) {
-                                                $empID = $row['empid'];
-                                                $empName = $row['name'];
-                                                $leavename = $row['LeaveName'];
-                                                $noofdays = $row['DaysTaken'];
-                                                $days = $row['days'];
-
-                                            ?>
-
-                                                <tr>
-                                                    <td><?php echo $empID ?></td>
-                                                    <td><?php echo $empName ?></td>
-                                                    <td><?php echo $leavename ?></td>
-                                                    <td><?php echo $noofdays ?></td>
-                                                    <td><?php echo $days ?></td>
-
-                                                </tr>
-
-                                            <?php
-
-                                            }
-
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <br>
-                            </div>
-
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-
-
                     <!-- /.card -->
                     <br>
 

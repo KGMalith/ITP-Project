@@ -323,6 +323,12 @@ if (isset($_GET['vid'])) {
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a href="../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item has-treeview">
                             <a href="" class="nav-link">

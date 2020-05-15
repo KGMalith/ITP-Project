@@ -310,6 +310,12 @@ $ExpenseTypes = mysqli_query($con, $query);
                             </ul>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
+                        </li>
                         <li class="nav-item has-treeview">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-angle-double-down"></i>
@@ -399,7 +405,7 @@ $ExpenseTypes = mysqli_query($con, $query);
                             <div class="table-responsive">
                                 <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                                     <table id="example1" class="table table-bordered table-hover">
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr>
                                                 <th>Expense Group Name</th>
                                                 <th>Expense Type Name</th>

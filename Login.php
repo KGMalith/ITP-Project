@@ -1,3 +1,6 @@
+<?php
+ob_start();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -63,16 +66,9 @@
                     ?>
                 </div>
 
-                <form action="inc/Login.inc.php" method="post">
+                <form action="inc/Login.inc.php" method="POST">
                     <div class="input-group mb-3">
-                        <?php
-                        if (isset($_GET['usname'])) {
-                            $uname = $_GET['usname'];
-                            echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user"  value="' . $uname . '" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
-                        } else {
-                            echo '<input type="text" class="form-control" placeholder="User Name" name="uname" id="user" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name">';
-                        }
-                        ?>
+                        <input type="text" class="form-control" placeholder="User Name" name="uname" id="user" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill User Name" value="<?php if(isset($_COOKIE['usernamecookie'])){echo $_COOKIE['usernamecookie'];} ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -80,7 +76,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="pass" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill Password">
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="pass" required="required" data-toggle="tooltip" data-placement="top" title="Please Fill Password" value="<?php if(isset($_COOKIE['passwordcookie'])){echo $_COOKIE['passwordcookie'];} ?>">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -90,7 +86,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember">
+                                <input type="checkbox" id="remember" name="rememberme">
                                 <label for="remember" style="color:black;">
                                     Remember Me
                                 </label>
@@ -103,12 +99,6 @@
                         <!-- /.col -->
                     </div>
                 </form>
-
-                <!-- /.social-auth-links -->
-
-                <p class="mb-1">
-                    <a href="#">I forgot my password</a>
-                </p>
 
             </div>
             <!-- /.login-card-body -->

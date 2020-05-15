@@ -388,7 +388,7 @@ $results = mysqli_stmt_get_result($state);
                                     <?php endif;  ?>
 
                                     <table table id="example1" class="table table-bordered table-hover table-responsive-sm">
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr>
                                                 <th>Invoice No.</th>
                                                 <th>Invoice Date</th>

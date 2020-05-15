@@ -220,7 +220,7 @@ if (isset($_GET['Lid'])) {
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportActionTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Action</p>
                                         <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                     </a>
@@ -228,7 +228,7 @@ if (isset($_GET['Lid'])) {
 
                                 <li class="nav-item">
                                     <a href="../../Transport/TransportHandlingTable.php" class="nav-link">
-                                       <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>
@@ -321,6 +321,12 @@ if (isset($_GET['Lid'])) {
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
                         </li>
 
                         <li class="nav-item has-treeview">

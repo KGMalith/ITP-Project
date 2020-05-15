@@ -7,9 +7,14 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 ?>
 <?php
 include '../inc/dbconnect.php';
-include '../inc/orderidgenerator.php';
 include '../inc/Dashboardcalculations.php';
+
+//getting the list of users
+$query = "SELECT * FROM vendor";
+$vendors = mysqli_query($con, $query);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,13 +22,11 @@ include '../inc/Dashboardcalculations.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Add Order</title>
+  <title>VendorTable</title>
   <!--Custom CSS-->
   <link rel="stylesheet" href="../dist/css/customCSS.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-  <!-- iCheck for checkboxes and radio inputs -->
-  <link rel="stylesheet" href="../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
@@ -32,10 +35,7 @@ include '../inc/Dashboardcalculations.php';
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- DataTables -->
   <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="../form-validator/theme-default.min.css">
   <link rel="stylesheet" href="../sweetalert/sweetalert2.min.css">
-  <link rel="stylesheet" href="../date-picker/bootstrap-datepicker.css">
-
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -69,13 +69,14 @@ include '../inc/Dashboardcalculations.php';
           </div>
         </li>
       </ul>
+
     </nav>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link">
+      <a href="" class="brand-link">
         <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
@@ -105,7 +106,7 @@ include '../inc/Dashboardcalculations.php';
             </li>
 
             <li class="nav-item">
-              <a href="../Order/OrderTable.php" class="nav-link active">
+              <a href="../Order/OrderTable.php" class="nav-link">
                 <i class="nav-icon fas fa-shopping-basket"></i>
                 <p>Order Management</p>
               </a>
@@ -201,6 +202,7 @@ include '../inc/Dashboardcalculations.php';
                   <i class="right fas fa-angle-left"></i>
                   <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                 </p>
+
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -251,7 +253,7 @@ include '../inc/Dashboardcalculations.php';
               </ul>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="" class="nav-link">
                 <i class="nav-icon fas fa-truck-moving"></i>
                 <p>Vehicle Management
@@ -307,8 +309,9 @@ include '../inc/Dashboardcalculations.php';
                 </li>
               </ul>
             </li>
+
             <li class="nav-item">
-              <a href="../Reports/EmployeeReport.php" class="nav-link">
+              <a href="../Reports/EmployeeReport.php" class="nav-link active">
                 <i class="nav-icon fas fa-file-pdf"></i>
                 <p>Reports</p>
               </a>
@@ -353,7 +356,7 @@ include '../inc/Dashboardcalculations.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Add Order</h1>
+              <h1 class="m-0 text-dark">Reports</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -372,133 +375,86 @@ include '../inc/Dashboardcalculations.php';
 
 
           <!--your conetent here-->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header" id="cus">
-                  <h5 class="card-title">Add Order Details</h5>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" data-placement="top" title="Minimize">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body">
+          <div class="card mb-5">
+            <div class="card-header">
+              <h3 class="card-title">Vendor Details</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <ul class="nav nav-tabs mt-3 mb-5" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/EmployeeReport.php">Employee</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/EmployeeLeaveReport.php">Employee Leave</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/CustomerReport.php">Customer</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="../Reports/VendorReport.php">Vendor</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/VehiclesReport.php">Vehicle</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/ExpensesReport.php">Expenses</a>
+                </li>
+              </ul>
+              <div class="table-responsive">
+                <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                  <table id="example1" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Name</th>
+                        <th style="width: 10%">Phone<br>(Mobile)</th>
+                        <th style="width: 10%">Phone<br>(Land)</th>
+                        <th>Email</th>
+                        <th style="width: 13%">City</th>
+                        <th style="width: 13%">District</th>
+                        <th>Address</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      while ($row = mysqli_fetch_assoc($vendors)) {
+                        $VendorID = $row['vendorID'];
+                        $VendorName = $row['vName'];
+                        $VendorMNumber = $row['vMNumber'];
+                        $VendorLNumber = $row['vLNumber'];
+                        $VendorEmail = $row['vEmail'];
+                        $VendorCity = $row['vCity'];
+                        $VendorDistrict = $row['vDistrict'];
+                        $VendorAddress = $row['vAddress'];
+                      ?>
 
-                  <?php if (isset($_GET['error']))
-                    if ($_GET['error'] == "emptyFields") : ?>
-                    <div class="fieldsempty" data-fields="<?= $_GET['emptyFields']; ?>"></div>
-                  <?php endif;  ?>
+                        <tr>
+                          <td><?php echo $VendorName ?></td>
+                          <td><?php echo $VendorMNumber ?></td>
+                          <td><?php echo $VendorLNumber ?></td>
+                          <td><?php echo $VendorEmail ?></td>
+                          <td><?php echo $VendorCity ?></td>
+                          <td><?php echo $VendorDistrict ?></td>
+                          <td><?php echo $VendorAddress ?></td>
+                        </tr>
 
-                  <?php if (isset($_GET['error']))
-                    if ($_GET['error'] == "ddaterequire") : ?>
-                    <div class="emptyddate" data-ddateerror="<?= $_GET['ddaterequire']; ?>"></div>
-                  <?php endif;  ?>
+                      <?php
 
+                      }
 
-
-                  <?php if (isset($_GET['error']))
-                    if ($_GET['error'] == "ddatemissmatch") : ?>
-                    <div class="missmatchdate" data-dateerror="<?= $_GET['ddatemissmatch']; ?>"></div>
-                  <?php endif;  ?>
-
-                  <?php if (isset($_GET['error']))
-                    if ($_GET['error'] == "SQLError") : ?>
-                    <div class="sqlerror" data-sql="<?= $_GET['SQLError']; ?>"></div>
-                  <?php endif;  ?>
-
-
-                  <?php if (isset($_GET['Register']))
-                    if ($_GET['Register'] == "Success") :  ?>
-                    <div class="flash-data" data-flashdata="<?= $_GET['Success']; ?>"></div>
-                  <?php endif;  ?>
-
-                  <form action="../inc/addorder.php" method="POST">
-                    <div class="form-group col-md-3 ml-1">
-                      <label>Order ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-box"></i></span>
-                        </div>
-                        <input type="text" class="form-control" name="orderid" value="<?php echo $orderid; ?>" readonly>
-                      </div>
-
-                    </div>
-
-                    <div class="form-row ml-1">
-                      <div class="form-group col-md-3">
-                        <label>Order Date<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">
-                              <i class="far fa-calendar-alt"></i>
-                            </span>
-                          </div>
-                          <input type="text" name="orderdate" class="form-control" value="<?php echo Date('Y-m-d'); ?>" readonly>
-                        </div>
-                      </div>
-
-                      <div class="col-md-3"></div>
-
-                      <div class="form-group col-md-3 ">
-                        <label>Expected Deliverey Date</label>
-                        <div class="input-group date" data-provide="datepicker">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">
-                              <i class="far fa-calendar-alt"></i>
-                            </span>
-                          </div>
-                          <input type="text" name="diliverydate" class="form-control" data-validation-error-msg="Please Select Date" autocomplete="off">
-                        </div>
-
-                      </div>
-
-                    </div>
-
-
-                    <div class="form-group col-md-4 ml-1">
-                      <label>Customer Name<span class="requiredIcon" style="color:red;">*</span></label>
-                      <select name="cusId" id="expensegroup" class="form-control">
-                        <option selected disabled>Select Customer</option>
-                        <?php
-                        $query = "SELECT customerID,cName FROM customer";
-                        $results = mysqli_query($con, $query);
-                        while ($group = mysqli_fetch_assoc($results)) {
-                          echo '<option value="' . $group["customerID"] . '">' . $group["cName"] . '</option>';
-                        }
-                        ?>
-                      </select>
-                    </div>
-
-                    <div class="form-row ml-1">
-                      <div class="form-group col-md-3">
-                        <label>Dilivery<span class="requiredIcon" style="color:red;">*</span></label>
-                        <div class="form-group clearfix">
-                          <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary1" name="check1" value="Yes">
-                            <label for="radioPrimary1">
-                              YES
-                            </label>
-                          </div>
-
-                          <div class="icheck-primary d-inline ml-3">
-                            <input type="radio" id="radioPrimary2" name="check1" value="No">
-                            <label for="radioPrimary2">
-                              NO
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <button type="submit" id="addorder" name="addorder" class="btn btn-success">Add Order</button>
-                    <a href="OrderTable.php"><button type="button" class="btn btn-warning" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
-                  </form>
+                      ?>
+                    </tbody>
+                  </table>
+                  <br>
                 </div>
               </div>
             </div>
+            <!-- /.card-body -->
+
           </div>
+          <!-- /.card -->
+          <br>
+
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content -->
@@ -515,8 +471,8 @@ include '../inc/Dashboardcalculations.php';
   </div>
   <!-- ./wrapper -->
 
-
   <!-- REQUIRED SCRIPTS -->
+  <script src="../Loader/script.js"></script>
   <!-- jQuery -->
   <script src="../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
@@ -531,7 +487,6 @@ include '../inc/Dashboardcalculations.php';
   <script src="../plugins/datatables/jquery.dataTables.js"></script>
   <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
 
-
   <!-- PAGE PLUGINS -->
   <!-- jQuery Mapael -->
   <script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
@@ -542,87 +497,43 @@ include '../inc/Dashboardcalculations.php';
   <script src="../plugins/chart.js/Chart.min.js"></script>
   <!-- PAGE SCRIPTS -->
   <script src="../dist/js/pages/dashboard2.js"></script>
-  <script src="../form-validator/jquery.form-validator.min.js"></script>
-  <script src="../form-validator/jquery.form-validator.js"></script>
   <script src="../sweetalert/sweetalert2.all.min.js"></script>
-  <script src="../date-picker/bootstrap-datepicker.js"></script>
-  <script src="../plugins/icheck-bootstrap/icheck.js"></script>
-
-  <script>
-    $('.date').datepicker({
-      format: 'yyyy-mm-dd',
-    });
-  </script>
-
-  <script>
-    $.validate();
-  </script>
-
-  <script>
-    //SweetAlert
-    const flashdata = $('.flash-data').data('flashdata')
-    if (flashdata) {
-      swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Order Submited Successfully.',
-        confirmButtonColor: 'green',
-        closeOnEsc: false,
-        closeOnClickOutside: false,
-
-      })
-    }
-
-    sql = $('.sqlerror').data('sql')
-    if (sql) {
-      swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        confirmButtonColor: 'green',
-        text: 'SQL Error!',
-        closeOnEsc: false,
-        closeOnClickOutside: false,
-      })
-    }
-
-    fields = $('.fieldsempty').data('fields')
-    if (fields) {
-      swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        confirmButtonColor: 'green',
-        text: 'Fields are Empty!',
-        closeOnEsc: false,
-        closeOnClickOutside: false,
-      })
-    }
-
-    ddateerror = $('.emptyddate').data('ddateerror')
-    if (ddateerror) {
-      swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        confirmButtonColor: 'green',
-        text: 'Dilivery Date Is Required!',
-        closeOnEsc: false,
-        closeOnClickOutside: false,
-      })
-    }
-
-    dateerror = $('.missmatchdate').data('dateerror')
-    if (dateerror) {
-      swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        confirmButtonColor: 'green',
-        text: 'Diliver Date Cannot Be Previous Date From Order Date!',
-        closeOnEsc: false,
-        closeOnClickOutside: false,
-      })
-    }
-  </script>
+  <script src="../Data-Table-Outputs/dataTables.buttons.min.js"></script>
+  <script src="../Data-Table-Outputs/jszip.min.js"></script>
+  <script src="../Data-Table-Outputs/pdfmake.min.js"></script>
+  <script src="../Data-Table-Outputs/vfs_fonts.js"></script>
+  <script src="../Data-Table-Outputs/buttons.html5.min.js"></script>
+  <script src="../Data-Table-Outputs/buttons.print.min.js"></script>
   <!-- page script -->
+
   <script>
+    $(function() {
+      $("#example1").DataTable({
+        dom: 'Bfrtip',
+        buttons: [{
+            extend: 'copy',
+            className: 'btn btn-info'
+          },
+          {
+            extend: 'csv',
+            className: 'btn btn-info'
+          },
+          {
+            extend: 'excel',
+            className: 'btn btn-info'
+          },
+          {
+            extend: 'pdf',
+            className: 'btn btn-info'
+          },
+          {
+            extend: 'print',
+            className: 'btn btn-info'
+          },
+        ],
+      });
+    });
+
     $(function() {
       $('[data-toggle="tooltip"]').tooltip()
     });

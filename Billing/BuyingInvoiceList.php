@@ -306,6 +306,12 @@ $results = mysqli_stmt_get_result($state);
                 </li>
               </ul>
             </li>
+            <li class="nav-item">
+              <a href="../Reports/EmployeeReport.php" class="nav-link">
+                <i class="nav-icon fas fa-file-pdf"></i>
+                <p>Reports</p>
+              </a>
+            </li>
 
             <li class="nav-item has-treeview">
               <a href="" class="nav-link">
@@ -390,7 +396,7 @@ $results = mysqli_stmt_get_result($state);
 
 
                   <table table id="example1" class="table table-bordered table-hover table-responsive-sm">
-                    <thead>
+                    <thead class="thead-dark">
                       <tr>
                         <th>Invoice No.</th>
                         <th>Invoice Date</th>

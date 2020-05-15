@@ -5,7 +5,7 @@
         $Leave_ID = mysqli_real_escape_string($con,$_GET['leaveid']);
         $Days = mysqli_real_escape_string($con, $_GET['days']);
 
-        if($Days < date('m/d/Y')){
+        if($Days < date('Y-m-d')){
             header("location: ../Employee/Leave/RemoveLeave.php?error=cannotdelete&empid=".$EMP_ID);
             exit();
         }

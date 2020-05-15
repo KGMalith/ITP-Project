@@ -78,7 +78,7 @@ $customers = mysqli_query($con, $query);
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link">
+      <a href="" class="brand-link">
         <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
       </a>
@@ -204,6 +204,7 @@ $customers = mysqli_query($con, $query);
                   <i class="right fas fa-angle-left"></i>
                   <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                 </p>
+
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -223,7 +224,7 @@ $customers = mysqli_query($con, $query);
               </ul>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="" class="nav-link">
                 <i class="nav-icon fas fa-coins"></i>
                 <p>Expenses Tracking
@@ -254,7 +255,7 @@ $customers = mysqli_query($con, $query);
               </ul>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item has-treeview">
               <a href="" class="nav-link">
                 <i class="nav-icon fas fa-truck-moving"></i>
                 <p>Vehicle Management
@@ -309,6 +310,13 @@ $customers = mysqli_query($con, $query);
                   </a>
                 </li>
               </ul>
+            </li>
+
+            <li class="nav-item">
+              <a href="../Reports/EmployeeReport.php" class="nav-link active">
+                <i class="nav-icon fas fa-file-pdf"></i>
+                <p>Reports</p>
+              </a>
             </li>
 
             <li class="nav-item has-treeview">
@@ -376,66 +384,69 @@ $customers = mysqli_query($con, $query);
             <div class="card-body">
               <ul class="nav nav-tabs mt-3 mb-5" role="tablist">
                 <li class="nav-item">
-                  <a class="nav-link" href="../Item/ItemReport.php">Item</a>
+                  <a class="nav-link" href="../Reports/EmployeeReport.php">Employee</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" href="CustomerReport.php">Customer</a>
+                  <a class="nav-link" href="../Reports/EmployeeLeaveReport.php">Employee Leave</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../Vendor/VendorReport.php">Vendor</a>
+                  <a class="nav-link active" href="../Reports/CustomerReport.php">Customer</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/VendorReport.php">Vendor</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/VehiclesReport.php">Vehicle</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../Reports/ExpensesReport.php">Expenses</a>
                 </li>
               </ul>
-              <div style="overflow:auto;">
-                <table id="example1" class="table table-bordered table-hover table-responsive-sm">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Phone<br>(Mobile)</th>
-                      <th>Phone<br>(Land)</th>
-                      <th>Email</th>
-                      <th>City</th>
-                      <th>District</th>
-                      <th>Address</th>
-
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    while ($row = mysqli_fetch_assoc($customers)) {
-                      $CustomerID = $row['customerID'];
-                      $CustomerName = $row['cName'];
-                      $CustomerMNumber = $row['cMNumber'];
-                      $CustomerLNumber = $row['cLNumber'];
-                      $CustomerEmail = $row['cEmail'];
-                      $CustomerCity = $row['cCity'];
-                      $CustomerDistrict = $row['cDistrict'];
-                      $CustomerAddress = $row['cAddress'];
-
-                    ?>
-
+              <div class="table-responsive">
+                <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                  <table id="example1" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
                       <tr>
-                        <td><?php echo $CustomerName ?></td>
-                        <td><?php echo $CustomerMNumber ?></td>
-                        <td><?php echo $CustomerLNumber ?></td>
-                        <td><?php echo $CustomerEmail ?></td>
-                        <td><?php echo $CustomerCity ?></td>
-                        <td><?php echo $CustomerDistrict ?></td>
-                        <td><?php echo $CustomerAddress ?></td>
-
+                        <th>Name</th>
+                        <th style="width: 10%">Phone<br>(Mobile)</th>
+                        <th style="width: 10%">Phone<br>(Land)</th>
+                        <th>Email</th>
+                        <th style="width: 13%">City</th>
+                        <th style="width: 13%">District</th>
+                        <th>Address</th>
                       </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      while ($row = mysqli_fetch_assoc($customers)) {
+                        $CustomerID = $row['customerID'];
+                        $CustomerName = $row['cName'];
+                        $CustomerMNumber = $row['cMNumber'];
+                        $CustomerLNumber = $row['cLNumber'];
+                        $CustomerEmail = $row['cEmail'];
+                        $CustomerCity = $row['cCity'];
+                        $CustomerDistrict = $row['cDistrict'];
+                        $CustomerAddress = $row['cAddress'];
+                      ?>
 
-                    <?php
+                        <tr>
+                          <td><?php echo $CustomerName ?></td>
+                          <td><?php echo $CustomerMNumber ?></td>
+                          <td><?php echo $CustomerLNumber ?></td>
+                          <td><?php echo $CustomerEmail ?></td>
+                          <td><?php echo $CustomerCity ?></td>
+                          <td><?php echo $CustomerDistrict ?></td>
+                          <td><?php echo $CustomerAddress ?></td>
+                        </tr>
 
-                    }
+                      <?php
 
-                    ?>
-                  </tbody>
-                </table>
-                <br>
-              </div>
-              <div class="row mt-4">
-                <div class="col-3">
-                  <button type="button" class="btn btn-warning" onclick="history.go(-1);" value="Back"><i class="fas fa-arrow-left"></i> Back</button>
+                      }
+
+                      ?>
+                    </tbody>
+                  </table>
+                  <br>
                 </div>
               </div>
             </div>
@@ -497,7 +508,7 @@ $customers = mysqli_query($con, $query);
   <!-- page script -->
   <script>
     $(function() {
-      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="tooltip"]').tooltip();
     })
 
 

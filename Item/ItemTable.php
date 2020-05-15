@@ -309,6 +309,12 @@ $items = mysqli_query($con, $query);
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a href="../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item has-treeview">
                             <a href="" class="nav-link">
@@ -398,7 +404,7 @@ $items = mysqli_query($con, $query);
                             <div class="table-responsive">
                                 <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                                     <table id="example1" class="table table-bordered table-hover table-responsive-sm" overflow="auto">
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr>
                                                 <th>Item ID</th>
                                                 <th>Item Name</th>

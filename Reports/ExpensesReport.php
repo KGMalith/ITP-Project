@@ -6,42 +6,14 @@ if (!isset($_SESSION['userid']) && !isset($_SESSION['username'])) {
 }
 ?>
 <?php
-include '../inc/dbconnect.php';
+require '../inc/dbconnect.php';
 include '../inc/Dashboardcalculations.php';
-$Emp_ID = "";
 
-if (isset($_GET['eid'])) {
-    $Emp_ID = mysqli_real_escape_string($con, $_GET['eid']);
-    $query = "SELECT * FROM employee WHERE id = {$Emp_ID}";
 
-    $resultset = mysqli_query($con, $query);
-
-    if ($resultset) {
-        if (mysqli_num_rows($resultset) == 1) {
-            $result = mysqli_fetch_assoc($resultset);
-            $eid = $result['empid'];
-            $fname = $result['fullname'];
-            $name = $result['name'];
-            $dob = $result['dob'];
-            $gender = $result['gender'];
-            $nic = $result['nicnum'];
-            $mobile = $result['mnumber'];
-            $address = $result['empaddress'];
-            $joindate = $result['jondate'];
-            $type = $result['emptype'];
-            $designation = $result['designation'];
-            $LicenNum = $result['DrivingLicenNum'];
-            $imglocation = $result['Imglocation'];
-            $imgstatus = $result['Imgstatus'];
-        } else {
-            header('Location: EmployeeTable.php?error=UserNotFound');
-        }
-    } else {
-        header('Location: EmployeeTable.php?error=SQLError');
-    }
-}
-
+$totamount = 0;
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +21,7 @@ if (isset($_GET['eid'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>View Employee</title>
+    <title>Expenses Report</title>
     <!--Custom CSS-->
     <link rel="stylesheet" href="../dist/css/customCSS.css">
     <!-- overlayScrollbars -->
@@ -62,10 +34,12 @@ if (isset($_GET['eid'])) {
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- DataTables -->
     <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="../form-validator/theme-default.min.css">
     <link rel="stylesheet" href="../sweetalert/sweetalert2.min.css">
     <link rel="stylesheet" href="../date-picker/bootstrap-datepicker.css">
-    </ <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <link rel="stylesheet" href="../form-validator/theme-default.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
     <div class="wrapper">
         <!-- Navbar -->
@@ -103,7 +77,7 @@ if (isset($_GET['eid'])) {
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="" class="brand-link">
                 <img src="../dist/img/RICE.jpg" alt="Company Logo" class="brand-image img-circle elevation-3">
                 <span class="brand-text font-weight-light">Nuwan Rice Mill</span>
             </a>
@@ -113,7 +87,7 @@ if (isset($_GET['eid'])) {
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../dist/img/4.jpg " class="img-circle elevation-2" alt="User Image">
+                        <img src="../dist/img/4.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block"><?php echo $_SESSION['username']; ?></a>
@@ -229,6 +203,7 @@ if (isset($_GET['eid'])) {
                                     <i class="right fas fa-angle-left"></i>
                                     <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                 </p>
+
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
@@ -248,7 +223,7 @@ if (isset($_GET['eid'])) {
                             </ul>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item has-treeview">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-coins"></i>
                                 <p>Expenses Tracking
@@ -279,7 +254,7 @@ if (isset($_GET['eid'])) {
                             </ul>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item has-treeview">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-truck-moving"></i>
                                 <p>Vehicle Management
@@ -305,8 +280,8 @@ if (isset($_GET['eid'])) {
                         </li>
 
 
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="" class="nav-link active">
+                        <li class="nav-item has-treeview">
+                            <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Employee Management
                                     <i class="right fas fa-angle-left"></i>
@@ -314,7 +289,7 @@ if (isset($_GET['eid'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../Employee/EmployeeTable.php" class="nav-link active">
+                                    <a href="../Employee/EmployeeTable.php" class="nav-link">
                                         <i class="nav-icon fas fa-user-friends"></i>
                                         <p>Employee Details</p>
                                     </a>
@@ -335,8 +310,9 @@ if (isset($_GET['eid'])) {
                                 </li>
                             </ul>
                         </li>
+
                         <li class="nav-item">
-                            <a href="../Reports/EmployeeReport.php" class="nav-link">
+                            <a href="../Reports/EmployeeReport.php" class="nav-link active">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>Reports</p>
                             </a>
@@ -381,7 +357,7 @@ if (isset($_GET['eid'])) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">View Employee</h1>
+                            <h1 class="m-0 text-dark">Reports</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -397,137 +373,151 @@ if (isset($_GET['eid'])) {
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="card mb-5 col-12">
+                    <div class="form-group">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Date Range</h3>
+                            </div>
+                            <div class="card-body">
+                                <form action="ExpensesReport.php" method="POST">
+                                    <div class="row">
+                                        <div class="form-group col-4">
+                                            <label>Start Date<span class="requiredIcon" style="color:red;">*</span></label>
+                                            <div class="input-group date" data-provide="datepicker">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" name="startdate" class="form-control" autocomplete="off" data-validation="required" data-validation-error-msg="Please Select Date">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3"></div>
+                                        <div class="form-group col-4">
+                                            <label>End Date<span class="requiredIcon" style="color:red;">*</span></label>
+                                            <div class="input-group date" data-provide="datepicker">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" name="enddate" class="form-control" autocomplete="off" data-validation="required" data-validation-error-msg="Please Select Date">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-5"></div>
+                                        <div><button type="submit" name="generate" class="btn btn-info btn-md" id="btnload">Generate</button></div>
+                                    </div>
 
-                        <div class="card-header" id="cus">
-                            <h5 class="card-title">View Employee Details</h5>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--your conetent here-->
+                    <div class="card mb-5">
+                        <div class="card-header">
+                            <h3 class="card-title">Expenses Details</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-success btn-sm" onclick="window.print()" data-toggle="tooltip" data-placement="left" title="Print"><i class="fas fa-print"></i></button></a>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <!-- /.card-header -->
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <?php
+                        <div class="card-body" id="cardb">
+                            <ul class="nav nav-tabs mt-3 mb-5" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Reports/EmployeeReport.php">Employee</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Reports/EmployeeLeaveReport.php">Employee Leave</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Reports/CustomerReport.php">Customer</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Reports/VendorReport.php">Vendor</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Reports/VehiclesReport.php">Vehicle</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="../Reports/ExpensesReport.php">Expenses</a>
+                                </li>
+                            </ul>
+                            <div class="table-responsive">
+                                <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                    <table id="example1" class="table table-bordered table-hover">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Expense Group Name</th>
+                                                <th>Expense Type Name</th>
+                                                <th>Payment Method</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (isset($_POST['generate'])) {
+                                                $startd = mysqli_real_escape_string($con, $_POST['startdate']);
+                                                $endd =  mysqli_real_escape_string($con, $_POST['enddate']);
 
-                                    if ($imgstatus == 1) {
-                                    ?>
-                                        <div class="card col-md-9 card-info shadow-lg bg-white rounded" class="box shadow">
+                                                $sql = "SELECT expense.Date,expense.Amount,expensegroup.ExpGName,expensetype.ExpTName,expense.PMethod FROM expense,expensegroup,expensetype WHERE expense.ExpGID = expensegroup.ExpGID AND expense.ExpTID = expensetype.ExpTID AND expense.Date >= '" . $startd . "' AND expense.Date <= '" . $endd . "'";
+                                                $result = mysqli_query($con, $sql);
 
-                                            <div class="card-img-top">
-                                                <img src="<?php echo  $imglocation ?>" alt="Image Preview" class="img-fluid">
-                                            </div>
+                                                $sql = "SELECT SUM(expense.Amount) AS totamount FROM expense,expensegroup,expensetype WHERE expense.ExpGID = expensegroup.ExpGID AND expense.ExpTID = expensetype.ExpTID AND expense.Date >= '" . $startd . "' AND expense.Date <= '" . $endd . "'";
+                                                $resultset = mysqli_query($con, $sql);
+                                                $row = mysqli_fetch_assoc($resultset);
+                                                $totamount = $row['totamount'];
 
-                                        </div>
-                                    <?php
-                                    } else {
-                                    ?>
 
-                                        <div class="card col-md-9 card-info shadow-lg bg-white rounded" class="box shadow">
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $date = $row['Date'];
+                                                    $exgName = $row['ExpGName'];
+                                                    $extName = $row['ExpTName'];
+                                                    $paymentMethod = $row['PMethod'];
+                                                    $amount = $row['Amount'];
 
-                                            <div class="card-img-top">
-                                                <img src="../Uploads/default.jpg" alt="Image Preview" class="img-fluid p-2" style="border-radius: 25px;">
-                                            </div>
+                                            ?>
 
-                                        </div>
+                                                    <tr>
+                                                        <td><?php echo $date ?></td>
+                                                        <td><?php echo $exgName ?></td>
+                                                        <td><?php echo $extName ?></td>
+                                                        <td><?php echo $paymentMethod ?></td>
+                                                        <td><?php echo $amount ?></td>
+                                                    </tr>
 
-                                    <?php
-                                    }
+                                            <?php
 
-                                    ?>
-
+                                                }
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td colspan="4" style="text-align: center"><b>Total</b></td>
+                                                <td><b><?php echo $totamount ?></b></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
                                 </div>
-
-                                <div class="col-md-8">
-                                    <div class="d-flex align-items-center">
-                                        <h2 class="font-weight-bold m-0"><?php echo $name ?></h2>
-                                        <address class="m-0 pt-2 pl-0 pl-md-4 font-weight-light text-secondary"><i class="fa fa-map-marker ">&nbsp;<?php echo $address ?></i></address>
-                                    </div>
-                                    <div class="row col-md-12 mt-3">
-                                        <p class="h5 text-primary mt-2 d-block font-weight-light "><b><?php echo $designation ?></b></p>
-                                        <?php
-                                        if ($designation == 'Driver') {
-                                            echo '    
-                                                <p class="h5 text-primary mt-2 ml-5 d-block font-weight-light"></p> 
-                                                <p class="h5 text-primary mt-2 ml-5 d-block font-weight-light"><labe style="color:black;"><b>Driving License Number :</b></labe> <b>' . $LicenNum . '</b></p>
-                                            ';
-                                        }
-                                        ?>
-                                    </div>
-
-                                    <section class="mt-5">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h3 class="h6 font-weight-light text-secondary text-uppercase">Employee ID</h3>
-                                                <div class="d-flex align-items-center">
-                                                    <strong class="h1 font-weight-bold m-0 mr-3"><?php echo $eid ?></strong>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-4">
-                                                <h3 class="h6 font-weight-light text-secondary text-uppercase">Employee Type</h3>
-                                                <div class="d-flex align-items-center">
-                                                    <strong class="h1 font-weight-bold m-0 mr-3"><?php echo $type ?></strong>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </section>
-                                    <section class="mt-4">
-                                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                            <li class="nav-item">
-                                                <a href="#home" class="nav-link active" data-toggle="tab" id="home-tab" aria-controls="home" aria-selected="true">About</a>
-                                            </li>
-                                        </ul>
-                                        <div class="tab-pane py-3 fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <h6 class="text-uppercase font-weight-light text-secondary">Contact Information</h6>
-                                            <dl class="row mt-4 mb-4 pb-3">
-                                                <dt class="col-sm-3">Phone</dt>
-                                                <dd class="col-sm-9"><?php echo $mobile ?></dd>
-                                                <dt class="col-sm-3">Home Address</dt>
-                                                <dd class="col-sm-9">
-                                                    <address class="mb-0"><?php echo $address  ?></address>
-                                                </dd>
-                                            </dl>
-                                            <h6 class="text-uppercase font-weight-light text-secondary">Other Informations</h6>
-                                            <dl class="row mt-4 mb-4 pb-3">
-                                                <dt class="col-sm-3">Full Name</dt>
-                                                <dd class="col-sm-9"><?php echo $fname ?></dd>
-                                                <dt class="col-sm-3">Birthday</dt>
-                                                <dd class="col-sm-9"><?php echo $dob ?></dd>
-                                                <dt class="col-sm-3">Gender</dt>
-                                                <dd class="col-sm-9"><?php echo $gender ?></dd>
-                                                <dt class="col-sm-3">NIC Number</dt>
-                                                <dd class="col-sm-9"><?php echo $nic ?></dd>
-                                                <dt class="col-sm-3">Join Date</dt>
-                                                <dd class="col-sm-9"><?php echo $joindate ?></dd>
-
-                                            </dl>
-                                        </div>
-                                    </section>
-
-
-                                </div>
-
                             </div>
-
-                            <div class="form-row">
-
-
-                            </div>
-
-                            <div class=" text-right">
-                                <a href="EmployeeTable.php"><button type="button" class="btn btn-warning ml-1" value="Back"><i class="fas fa-arrow-left"></i> Back To Table</button></a>
-                            </div>
-
                         </div>
-
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                     <br>
 
-                    <!-- /.row -->
+
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content -->
@@ -536,18 +526,16 @@ if (isset($_GET['eid'])) {
 
         <!-- Main Footer -->
         <footer class="main-footer">
-            <div id="foot">
-                <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
-                <div class="float-right d-none d-sm-inline-block img_div">
-                    <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
-                </div>
+            <strong>Copyright &copy; 2019 Nuwan Rice Mill.</strong> All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Powered By</b> <img src="../dist/img/3.png" alt="User Image">
             </div>
         </footer>
     </div>
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
-
+    <script src="../Loader/script.js"></script>
     <!-- jQuery -->
     <script src="../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
@@ -572,34 +560,59 @@ if (isset($_GET['eid'])) {
     <script src="../plugins/chart.js/Chart.min.js"></script>
     <!-- PAGE SCRIPTS -->
     <script src="../dist/js/pages/dashboard2.js"></script>
+    <script src="../sweetalert/sweetalert2.all.min.js"></script>
     <script src="../form-validator/jquery.form-validator.min.js"></script>
     <script src="../form-validator/jquery.form-validator.js"></script>
-    <script src="../sweetalert/sweetalert2.all.min.js"></script>
     <script src="../date-picker/bootstrap-datepicker.js"></script>
-
-    <script>
-        $.validate();
-    </script>
-
-    <script>
-        $('.datepicker').datepicker();
-    </script>
-
+    <script src="../Data-Table-Outputs/dataTables.buttons.min.js"></script>
+    <script src="../Data-Table-Outputs/jszip.min.js"></script>
+    <script src="../Data-Table-Outputs/pdfmake.min.js"></script>
+    <script src="../Data-Table-Outputs/vfs_fonts.js"></script>
+    <script src="../Data-Table-Outputs/buttons.html5.min.js"></script>
+    <script src="../Data-Table-Outputs/buttons.print.min.js"></script>
 
     <!-- page script -->
     <script>
-        $(function() {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-            });
+        $.validate();
+        $('.date').datepicker({
+            format: 'yyyy-mm-dd',
         });
     </script>
-    </body>
+    <script>
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        $(document).ready(function() {
+            $('#example1').DataTable({
+
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'copy',
+                        className: 'btn btn-info'
+                    },
+                    {
+                        extend: 'csv',
+                        className: 'btn btn-info'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-info'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-info'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-info'
+                    },
+                ],
+                overflow: scroll,
+
+            });
+
+        });
+    </script>
+</body>
 
 </html>

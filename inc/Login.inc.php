@@ -25,18 +25,29 @@ if(isset($_POST['signin'])){
                     if($row = mysqli_fetch_assoc($result)){
                         $pwdCheck = password_verify($password ,$row['password']);
                             if($pwdCheck == false){
-                                header("Location: ../Login.php?error=WrongPassword&usname=".$username);
+                                header("Location: ../Login.php?error=WrongPassword");
                                 exit();
                             }
                             else if($pwdCheck == true){
-                            
-                                    session_start();
-                                    $_SESSION['userid'] = $row['userid'];
-                                    $_SESSION['username'] = $row['uname'];
-                                    header("Location: ../Index.php");
-                                    exit();      
-                            }
-                            else{
+
+                                    if(isset($_POST['rememberme'])){
+                                        session_start();
+                                        $_SESSION['userid'] = $row['userid'];
+                                        $_SESSION['username'] = $row['uname'];
+                                        setcookie('usernamecookie', $username, time() + (86400*30),"/");
+                                        setcookie('passwordcookie', $password, time() + (86400 * 30),"/");
+                                        header("Location: ../Index.php");
+                                        exit();
+                                    }else{
+                                        session_start();
+                                        $_SESSION['userid'] = $row['userid'];
+                                        $_SESSION['username'] = $row['uname'];
+                                        setcookie('usernamecookie','', time() - (86400 * 30), "/");
+                                        setcookie('passwordcookie','', time() - (86400 * 30), "/");
+                                        header("Location: ../Index.php");
+                                        exit();
+                                    }
+                                }else{
                                 header("Location: ../Login.php?error=WrongPassword");
                                 exit(); 
                             }

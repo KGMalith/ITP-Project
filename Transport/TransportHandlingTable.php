@@ -207,7 +207,7 @@ $results = mysqli_query($con, $query);
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="../Transport/TransportActionTable.php" class="nav-link">
-                                         <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Action</p>
                                         <span class="badge badge-warning right"><?php num_of_transportAction(); ?></span>
                                     </a>
@@ -215,7 +215,7 @@ $results = mysqli_query($con, $query);
 
                                 <li class="nav-item">
                                     <a href="../Transport/TransportHandlingTable.php" class="nav-link active">
-                                         <i class="nav-icon fas fa-shipping-fast"></i>
+                                        <i class="nav-icon fas fa-shipping-fast"></i>
                                         <p>Transport Handling</p>
                                     </a>
                                 </li>
@@ -308,6 +308,12 @@ $results = mysqli_query($con, $query);
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../Reports/EmployeeReport.php" class="nav-link">
+                                <i class="nav-icon fas fa-file-pdf"></i>
+                                <p>Reports</p>
+                            </a>
                         </li>
 
                         <li class="nav-item has-treeview">
@@ -402,7 +408,7 @@ $results = mysqli_query($con, $query);
                             <div class="table-responsive">
                                 <div class="dataTables_wrapper container-fluid dt-bootstrap4">
                                     <table id="example1" class="table table-bordered table-hover">
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr>
                                                 <th style="width: 10%">Order ID</th>
                                                 <th style="width: 12%">Expected Dilvery Date</th>
